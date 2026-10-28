@@ -93,7 +93,7 @@ python tools/benchmark.py
 
 ## 四项研究扩展
 
-工作台“辅助工具 → 研究实验”提供以下功能；默认启发式优化与 LRU，普通 SQL 独立于模型。完整引用及实测结果见 `docs/AuroraDB_项目论文.pdf`，实现契约见 `docs/RESEARCH_DESIGN.txt`。
+工作台“辅助工具 → 研究实验”提供以下功能；默认启发式优化与 LRU，普通 SQL 独立于模型。完整引用及实测结果见 `docs/AuroraDB_大作业报告.pdf`，实现契约见 `docs/RESEARCH_DESIGN.txt`。
 
 | 方向 | 已实现的创新点 | 研究依据 |
 | --- | --- | --- |
@@ -114,7 +114,6 @@ python tools/join_optimizer_experiment.py
 python tools/buffer_experiment.py
 python tools/semantic_experiment.py
 python tools/research_executable_smoke.py
-python tools/build_research_paper.py
 ```
 
 ## 对应作业要求
@@ -127,10 +126,11 @@ python tools/build_research_paper.py
 | 执行引擎 | Database 的关系执行流程 | CRUD、连接、聚合、排序、NULL 语义及差分测试 |
 | 用户界面 | `auroradb/web/`、server.py、__main__.py | 浏览器工作台和命令行，真实 HTTP 集成测试 |
 | 源码与可执行程序 | auroradb、tests、tools、dist/AuroraDB.exe | 可复现构建及打包程序实际运行检查 |
-| 大作业报告（论文格式） | docs/AuroraDB_大作业报告.pdf | 五个组件的实现方法、四项创新、279 项测试与实验结果、小组分工、参考文献 |
-| 软件工程规范方法 | docs/AuroraDB_软件工程文档.pdf | 需求分析与用例、UML 类图 / 时序图 / 状态图、55 个测试用例、需求追踪矩阵、已知缺陷 |
-| 使用说明、模块方法与测试报告 | docs 内 PDF、JSON 与内部设计说明 | 实测结果、格式说明、演示步骤与边界 |
-| 小组分工和完成情况 | docs/分工说明填写表.txt | 按实际参与人员填写，不预设成员身份；填写后重新生成软件工程文档，内容写入第 07 章 |
+| 大作业报告（唯一的报告文件） | docs/AuroraDB_大作业报告.pdf | 以下各项均包含在这一份报告中 |
+| 软件工程规范方法 | 报告第 3、4、11、12 节 | 用例图与用例规约、23 条功能需求与 8 条非功能需求、UML 类图 / 时序图 / 状态图、55 个测试用例、需求追踪矩阵、已知缺陷、迭代与配置管理 |
+| 各模块实现方法与测试报告 | 报告第 5–9、11 节；docs 内 JSON 与内部设计说明 | 五个组件与四项创新的实现、279 项测试、实验结果与原始证据 |
+| 使用说明 | 报告第 10 节；本 README | 启动方式、命令行与 AI 配置 |
+| 小组分工和完成情况 | 报告第 13 节；docs/分工说明填写表.txt | 四人分工、负责模块、源文件与测试 |
 
 ## 支持的 SQL
 
@@ -206,19 +206,15 @@ python -m pip install --target .build/deps pyinstaller
 python tools/build_exe.py
 ```
 
-源码模块和测试均带注释。`tools/build_report.py` 用 reportlab 从真实测试证据生成报告；文档生成依赖不属于数据库运行依赖。`tools/build_se_docs.py` 生成软件工程文档，其中每个自动化测试用例都必须在 `docs/test_results.json` 中存在且已通过，否则拒绝生成。
+源码模块和测试均带注释。大作业报告用 LaTeX（XeLaTeX）编写，报告中的 55 个测试用例在生成时逐条核对其在 `docs/test_results.json` 中存在且已通过。
 
 ```powershell
-python -m pip install reportlab
-python tools/build_report.py
-python tools/build_se_docs.py
-python tools/build_research_paper.py
 python tools/executable_smoke.py
 python tools/research_executable_smoke.py
 python tools/package_submission.py
 ```
 
-报告构建默认使用 Windows 中文字体，也可通过 `AURORADB_CJK_FONT` 指定中文 TrueType 字体路径。完整提交包的 `MANIFEST.json` 保存每个文件的 SHA-256；打包程序会重新读取 ZIP 并验证所有文件内容。
+完整提交包的 `MANIFEST.json` 保存每个文件的 SHA-256；打包程序会重新读取 ZIP 并验证所有文件内容。
 
 打包排除规则不区分文件名大小写，并排除任意目录下的 `pages.dat`、`redo.wal`、`.db` / `.sqlite` / `.sqlite3` 数据文件及对应 SQLite WAL/SHM 文件；本地配置和环境变量文件仍按前述规则排除。
 

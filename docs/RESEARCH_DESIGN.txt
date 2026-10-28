@@ -67,8 +67,8 @@ tools/buffer_experiment.py -> docs/buffer_research.json（默认完整180runs；
 tools/semantic_experiment.py -> docs/semantic_research.json（仅本机假服务）。
 tools/ui_research_smoke.cjs -> 可重复纯Node UI行为检查，不是实际排版验收。
 tools/research_executable_smoke.py -> docs/research_executable_smoke.json（实际EXE研究端点）。
-tools/build_research_paper.py -> docs/AuroraDB_项目论文.pdf。
-实验JSON保留source_sha256；论文生成器拒绝失败或源码过期证据。原始数值应保留，不能为论文预期选择性删除失败或性能退化结果。
+实验结果与引用汇总在 docs/AuroraDB_大作业报告.pdf。
+实验JSON保留source_sha256；打包脚本拒绝失败或源码过期证据。原始数值应保留，不能为论文预期选择性删除失败或性能退化结果。
 存储恢复对合法B/P前缀后的完整未知尾帧保留WAL与数据原字节并拒绝恢复，不能以损坏提交类型为由清理证据；保守证据不单独授权重做。提交包按不区分大小写的规则排除本地配置、环境变量文件、任意目录下的pages.dat/redo.wal、.db/.sqlite/.sqlite3及对应SQLite WAL/SHM文件。
 
 七、参考文献
