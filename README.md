@@ -127,6 +127,7 @@ python tools/build_research_paper.py
 | 执行引擎 | Database 的关系执行流程 | CRUD、连接、聚合、排序、NULL 语义及差分测试 |
 | 用户界面 | `auroradb/web/`、server.py、__main__.py | 浏览器工作台和命令行，真实 HTTP 集成测试 |
 | 源码与可执行程序 | auroradb、tests、tools、dist/AuroraDB.exe | 可复现构建及打包程序实际运行检查 |
+| 大作业报告（论文格式） | docs/AuroraDB_大作业报告.pdf | 五个组件的实现方法、四项创新、279 项测试与实验结果、小组分工、参考文献 |
 | 软件工程规范方法 | docs/AuroraDB_软件工程文档.pdf | 需求分析与用例、UML 类图 / 时序图 / 状态图、55 个测试用例、需求追踪矩阵、已知缺陷 |
 | 使用说明、模块方法与测试报告 | docs 内 PDF、JSON 与内部设计说明 | 实测结果、格式说明、演示步骤与边界 |
 | 小组分工和完成情况 | docs/分工说明填写表.txt | 按实际参与人员填写，不预设成员身份；填写后重新生成软件工程文档，内容写入第 07 章 |
