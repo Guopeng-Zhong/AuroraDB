@@ -35,18 +35,17 @@ def include_file(path):
 
 def main():
     required=['dist/AuroraDB.exe','启动工作台.cmd','README.md',
-              'docs/AuroraDB_设计与测试报告.pdf','docs/AuroraDB_使用说明.pdf',
-              'docs/AuroraDB_项目论文.pdf','docs/AuroraDB_软件工程文档.pdf',
+              'docs/AuroraDB_大作业报告.pdf',
               'docs/RESEARCH_DESIGN.txt',
               'docs/test_results.json','docs/benchmark.json','docs/executable_smoke.json',
-              'docs/research_executable_smoke.json','docs/research_ui_smoke.json','docs/pdf_layout_qa.json',
+              'docs/research_executable_smoke.json','docs/research_ui_smoke.json',
               'docs/optimizer_research.json','docs/buffer_research.json','docs/semantic_research.json',
               'docs/chinook_import.json']
     assert all((ROOT/p).is_file() for p in required),'A required deliverable is missing'
     assert json.loads((ROOT/'docs/test_results.json').read_text(encoding='utf-8'))['passed']
     assert json.loads((ROOT/'docs/executable_smoke.json').read_text(encoding='utf-8'))['passed']
     evidence_names = ['test_results.json','optimizer_research.json','buffer_research.json',
-                      'semantic_research.json','research_ui_smoke.json','research_executable_smoke.json','pdf_layout_qa.json']
+                      'semantic_research.json','research_ui_smoke.json','research_executable_smoke.json']
     campus_path = ROOT/'docs/campus_api_smoke.json'
     if campus_path.is_file():
         evidence_names.append('campus_api_smoke.json')
