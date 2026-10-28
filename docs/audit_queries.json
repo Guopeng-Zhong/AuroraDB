@@ -1,0 +1,100 @@
+{
+  "format_version": 1,
+  "generated_at": "2026-10-23T08:56:25.102923+00:00",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "sqlite_oracle_version": "3.53.1"
+  },
+  "engine_sha256": "22e5607523ff22f491f3c63d17788677bfbf4c054b58e164a2c13e832171623b",
+  "suites": [
+    {
+      "name": "scan_index_consistency",
+      "seed": 731,
+      "comparisons": 285,
+      "passed": 285,
+      "mismatches": 0,
+      "elapsed_seconds": 1.823745,
+      "case_sha256": "c5d29832e984e3c3b9dc4e7ae8f8f660c1891a1076ce59231931831c773c4587",
+      "coverage": {
+        "rows_per_database": 150,
+        "types": [
+          "INTEGER",
+          "REAL",
+          "TEXT",
+          "BOOLEAN"
+        ],
+        "operators": [
+          "=",
+          "<",
+          "<=",
+          ">",
+          ">="
+        ],
+        "nulls": true,
+        "forms": [
+          "filtered projection",
+          "filtered grouped COUNT/AVG",
+          "literal-left comparison"
+        ],
+        "indexed_columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "boolean_numeric_coercion": "rejected; covered by semantic regression tests"
+      },
+      "failures": [],
+      "index_path_queries": 123
+    },
+    {
+      "name": "sqlite_join_group_having",
+      "seed": 919,
+      "comparisons": 99,
+      "passed": 99,
+      "mismatches": 0,
+      "elapsed_seconds": 0.357367,
+      "case_sha256": "d5f406ed792e5963e691817284744caa93ac58738c7244719dd2ff5266185c08",
+      "coverage": {
+        "rows": {
+          "l": 35,
+          "r": 40,
+          "s": 14
+        },
+        "joins": [
+          "INNER",
+          "LEFT",
+          "chained LEFT"
+        ],
+        "predicates": [
+          "equality",
+          "arithmetic equality",
+          "AND",
+          "OR",
+          "inequality",
+          "IS NULL"
+        ],
+        "aggregates": [
+          "COUNT(*)",
+          "COUNT(column)",
+          "SUM",
+          "AVG"
+        ],
+        "clauses": [
+          "WHERE",
+          "GROUP BY",
+          "HAVING",
+          "ORDER BY source and output alias"
+        ],
+        "comparison": "Exact row arrays, including NULL and floating-point values",
+        "oracle": "SQLite external test oracle; restricted to the supported shared subset"
+      },
+      "failures": []
+    }
+  ],
+  "total_comparisons": 384,
+  "total_passed": 384,
+  "total_mismatches": 0,
+  "scope": "Independent query comparisons supplement the unit tests; no full SQL compatibility claim."
+}

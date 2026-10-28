@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#262624" media="(prefers-color-scheme: dark)">
+  <title>AuroraDB · SQL 工作台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#sql-editor">跳转到 SQL 编辑器</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="数据库导航">
+      <div class="sidebar-top"><a class="brand" href="/" aria-label="AuroraDB 首页">AuroraDB</a><button class="secondary-button mobile-schema-button" id="toggle-schema" aria-expanded="false" aria-controls="schema-list">数据库对象</button></div>
+      <div class="database-card"><div class="database-name">本机数据库<span class="connection-dot" id="connection-dot"></span></div><div class="database-description">磁盘持久化 · 共享事务会话</div></div>
+      <div class="section-label"><span>数据库对象</span><button class="icon-button" id="refresh-schema" aria-label="刷新结构" title="刷新数据库结构">↻</button></div>
+      <div class="schema-list" id="schema-list"><p class="muted small">正在读取数据库结构…</p></div>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-footer">点击字段可插入 SQL</div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar"><h1>SQL 工作台</h1><div class="topbar-actions"><div class="theme-switch" role="group" aria-label="界面主题"><button type="button" data-theme-choice="system" aria-pressed="true" title="跟随系统"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">系统</span></button><button type="button" data-theme-choice="light" aria-pressed="false" title="浅色"><span class="theme-icon" aria-hidden="true">☀</span><span class="theme-label">浅色</span></button><button type="button" data-theme-choice="dark" aria-pressed="false" title="深色"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">深色</span></button></div><span class="connection-status" id="connection-status"><span class="status-dot"></span>正在连接</span><button class="text-button" id="help-button" aria-expanded="false" aria-controls="help-panel">使用指南</button></div></header>
+
+      <div class="session-strip" aria-label="当前事务状态"><div class="session-state"><span class="transaction-badge" id="transaction-badge">事务状态待更新</span><span id="transaction-pages">暂存页 —</span></div><a class="advanced-link" href="#advanced-heading">工具与 AI <span aria-hidden="true">↓</span></a></div>
+
+      <section class="metric-grid" aria-label="真实缓冲区统计">
+        <div class="metric-card"><div class="metric-label">缓冲区命中率</div><div class="metric-value" id="metric-hit">—<small>%</small></div><div class="metric-detail" id="metric-hit-detail">等待引擎统计</div></div>
+        <div class="metric-card"><div class="metric-label">缓存页</div><div class="metric-value" id="metric-pages">—</div><div class="metric-detail" id="metric-pages-detail">LRU 缓冲池</div></div>
+        <div class="metric-card"><div class="metric-label">磁盘读取</div><div class="metric-value" id="metric-reads">—</div><div class="metric-detail">实际页读取次数</div></div>
+        <div class="metric-card"><div class="metric-label">磁盘写入</div><div class="metric-value" id="metric-writes">—</div><div class="metric-detail">实际页写入次数</div></div>
+      </section>
+
+      <section class="help-panel" id="help-panel" hidden><h2>从第一条 SQL 开始</h2><p><kbd>Ctrl</kbd> + <kbd>Enter</kbd> 执行当前选区，未选中文字时执行整个编辑器。支持多条 SQL；单条写操作自动提交。使用 <code>BEGIN;</code> 与 <code>COMMIT;</code> 或 <code>ROLLBACK;</code> 控制事务。所有浏览器标签页共享同一个事务会话。</p><p>点击左侧表名展开字段，点击字段可插入编辑器。右上方选择示例来体验查询、聚合、连接、索引和回滚。执行 <code>EXPLAIN ANALYZE SELECT ...;</code> 可以查看执行计划与实际计数。</p><p>示例数据来自启动参数 <code>--demo</code>，仅为空数据库创建，不会覆盖已有表。若数据库为空，请使用 <code>python -m auroradb --demo --web</code> 启动。</p></section>
+
+      <section class="editor-panel panel" aria-labelledby="editor-heading">
+        <div class="panel-header"><div class="panel-heading"><h2 id="editor-heading">SQL 编辑器</h2></div><div class="editor-tools"><label class="sr-only" for="example-select">选择 SQL 示例</label><select id="example-select"><option value="">选择示例…</option></select><button class="icon-button" id="copy-sql" aria-label="复制 SQL" title="复制 SQL">⧉</button><button class="icon-button" id="clear-sql" aria-label="清空编辑器" title="清空编辑器">⌫</button></div></div>
+        <div class="editor-container"><div class="line-numbers" id="line-numbers" aria-hidden="true">1</div><div class="editor-scroll"><pre id="highlight-layer" aria-hidden="true"></pre><textarea id="sql-editor" aria-label="SQL 编辑器" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea></div></div>
+        <div class="editor-footer"><div class="editor-hint"><span id="editor-hint">执行整个编辑器</span><span class="keyboard-hint"><kbd>Ctrl</kbd><span>+</span><kbd>Enter</kbd></span></div><button class="run-button" id="run-query"><span id="run-label">执行 SQL</span></button></div>
+      </section>
+
+      <section class="results-panel panel" aria-label="执行结果">
+        <div class="panel-header result-header"><div class="result-tabs" role="tablist" aria-label="结果视图"><button class="result-tab active" id="tab-results" role="tab" aria-controls="results-view" aria-selected="true">查询结果 <span class="count-badge" id="result-count">0</span></button><button class="result-tab" id="tab-plan" role="tab" aria-controls="plan-view" aria-selected="false">执行计划</button></div><div class="execution-summary" id="execution-summary">等待查询</div></div>
+        <div class="statement-bar" id="statement-bar" hidden><label for="statement-select">语句</label><select id="statement-select"></select><span id="statement-message"></span></div>
+        <div class="error-panel" id="error-panel" role="alert" hidden><div class="error-title">查询未完成</div><pre id="error-message"></pre></div>
+        <div class="result-view" id="results-view" role="tabpanel" aria-labelledby="tab-results"><div class="empty-state" id="result-empty"><h3>暂无查询结果</h3><p>执行 SQL 后，结果显示在这里。</p></div><div class="table-container" id="table-container" hidden></div></div>
+        <div class="result-view plan-view" id="plan-view" role="tabpanel" aria-labelledby="tab-plan" hidden><div class="empty-state"><h3>暂无执行计划</h3><p>使用 EXPLAIN 或 EXPLAIN ANALYZE 查看查询计划。</p></div></div>
+        <div class="result-footer"><span id="result-footer-text">结果来自 AuroraDB 自研执行引擎</span><div class="result-counters"><span>扫描行 <strong id="query-scanned">—</strong></span><span>索引查找 <strong id="query-index">—</strong></span></div></div>
+      </section>
+
+      <section class="advanced-panel panel" aria-labelledby="advanced-heading">
+        <div class="advanced-heading"><h2 id="advanced-heading">辅助工具</h2></div>
+        <div class="advanced-tabs" role="tablist" aria-label="高级能力"><button class="advanced-tab active" id="tool-tab-ai" role="tab" aria-controls="tool-view-ai" aria-selected="true">AI 助手</button><button class="advanced-tab" id="tool-tab-compare" role="tab" aria-controls="tool-view-compare" aria-selected="false">扫描对比</button><button class="advanced-tab" id="tool-tab-integrity" role="tab" aria-controls="tool-view-integrity" aria-selected="false">一致性检查</button><button class="advanced-tab" id="tool-tab-research" role="tab" aria-controls="tool-view-research" aria-selected="false">研究实验</button></div>
+
+        <div class="tool-view" id="tool-view-ai" role="tabpanel" aria-labelledby="tool-tab-ai">
+          <div class="tool-status-row"><div class="ai-status" id="ai-status"><span class="mode-badge" id="ai-mode-badge">读取配置中</span><span id="ai-model-label">配置仅保存在后端</span></div><button class="icon-button" id="refresh-ai-status" aria-label="刷新 AI 配置状态" title="刷新 AI 配置状态">↻</button></div>
+          <p class="tool-note" id="ai-status-message">正在读取模型配置。API 密钥不进入浏览器。</p>
+          <div class="ai-input-grid"><div><label class="field-label" for="ai-action">希望助手做什么</label><select id="ai-action"><option value="generate">生成 SQL</option><option value="explain">解释当前 SQL</option><option value="optimize">优化当前 SQL</option></select><p class="tool-note" id="ai-action-hint">根据问题与真实表结构生成只读查询。</p></div><div class="ai-prompt-field"><label class="field-label" for="ai-prompt">问题或补充要求</label><textarea id="ai-prompt" rows="3" maxlength="8000" placeholder="例如：查询绩点不低于 3.8 的学生，按绩点降序显示。"></textarea></div></div>
+          <div class="tool-action-row"><span class="tool-note">建议先校验再使用；助手不会自动执行 SQL。</span><div><button class="secondary-button" id="clear-ai">清空</button><button class="primary-button ai-button" id="run-ai" disabled><span id="ai-run-label">获取建议</span></button></div></div>
+          <div class="tool-error" id="ai-error" role="alert" hidden></div>
+          <div class="tool-empty" id="ai-empty">描述想查询的内容，或选择解释、优化上方编辑器中的 SQL。</div>
+          <div class="ai-output" id="ai-output" hidden aria-live="polite"><div class="ai-output-header"><span id="ai-output-provider"></span><span class="validation-badge" id="ai-validation-badge"></span></div><p class="ai-explanation" id="ai-explanation"></p><div id="ai-sql-section" hidden><div class="suggestion-code-header"><span>SQL 建议</span><div><button class="text-button" id="copy-ai-sql">复制 SQL</button><button class="secondary-button" id="import-ai-sql" disabled>填入编辑器</button></div></div><pre class="suggestion-code" id="ai-sql"></pre></div><p class="tool-note" id="ai-validation-message"></p><div class="ai-lists"><div id="ai-suggestions-section" hidden><h3>建议</h3><ul id="ai-suggestions"></ul></div><div id="ai-warnings-section" hidden><h3>注意</h3><ul id="ai-warnings"></ul></div></div><details class="tool-details" id="ai-validation-details" hidden><summary>查看校验计划</summary><pre id="ai-validation-plan"></pre></details></div>
+        </div>
+
+        <div class="tool-view" id="tool-view-compare" role="tabpanel" aria-labelledby="tool-tab-compare" hidden><div class="tool-intro"><div><h3>同一查询，两条真实访问路径</h3><p>使用上方编辑器中的单条 SELECT；也支持 EXPLAIN 包装。对比全表扫描与优化器选择，核对结果是否一致。</p></div><button class="primary-button" id="run-compare">开始对比</button></div><p class="tool-note">每路查询前清空应用缓冲池；操作系统文件缓存与事务暂存页保留。耗时受环境影响，不作为固定性能承诺。</p><div class="tool-error" id="compare-error" role="alert" hidden></div><div class="tool-empty" id="compare-empty">先选择主键点查或索引范围示例，再开始对比。</div><div id="compare-output" hidden aria-live="polite"><div class="comparison-verdict" id="compare-verdict"></div><pre class="comparison-sql" id="compare-sql"></pre><div class="comparison-grid" id="comparison-grid"></div><p class="tool-note" id="compare-policy"></p></div></div>
+
+        <div class="tool-view" id="tool-view-integrity" role="tabpanel" aria-labelledby="tool-tab-integrity" hidden><div class="tool-intro"><div><h3>检查页面、表与 B+ 树</h3><p>只读检查存储结构、记录和索引关系，展示实际检查结果。事务内检查以当前会话可见数据为准。</p></div><button class="primary-button" id="run-integrity">检查一致性</button></div><div class="tool-error" id="integrity-error" role="alert" hidden></div><div class="tool-empty" id="integrity-empty">点击检查，查看当前数据库的一致性证据。</div><div id="integrity-output" hidden aria-live="polite"><div class="comparison-verdict" id="integrity-verdict"></div><div class="integrity-metrics" id="integrity-metrics"></div><ul class="integrity-issues" id="integrity-issues"></ul><p class="tool-note" id="integrity-detail"></p></div></div>
+
+        <div class="tool-view research-view" id="tool-view-research" role="tabpanel" aria-labelledby="tool-tab-research" hidden>
+          <div class="tool-status-row"><h3 class="research-title">实验状态</h3><button class="secondary-button" id="refresh-research">刷新状态</button></div><p class="tool-note" id="research-status-note">状态来自当前数据库实例；实验结果不会自动替换编辑器内容。</p><div class="research-status-grid" id="research-status-grid"></div><div class="tool-error" id="research-status-error" role="alert" hidden></div><details class="tool-details"><summary>查看状态详情</summary><pre id="research-status-json">等待读取</pre></details>
+
+          <section class="research-section" aria-labelledby="research-optimize-heading"><h3 id="research-optimize-heading">可信改写</h3><p class="tool-note">读取上方编辑器中的单条查询，验证候选并比较实际执行。当前提交数据实测相同不等于已证明普遍等价。</p><div class="candidate-label-row"><label class="field-label" for="research-candidate">候选 SQL（可选，留空使用本地规则）</label><label class="sr-only" for="research-candidate-example">选择演示候选</label><select id="research-candidate-example" hidden><option value="">演示候选…</option></select></div><textarea class="research-textarea code-input" id="research-candidate" rows="3" maxlength="32768" spellcheck="false" placeholder="可输入需要验证的候选 SELECT。"></textarea><label class="check-label"><input type="checkbox" id="research-use-ai"><span>使用配置的远程模型生成候选</span></label><p class="tool-note" id="research-model-note">远程模型默认不启用。</p><div class="research-actions"><button class="primary-button" id="run-research-optimize">验证并比较</button></div><div class="tool-error" id="research-optimize-error" role="alert" hidden></div><div id="research-optimize-output" hidden aria-live="polite"><div class="comparison-verdict" id="research-verification"></div><p class="research-message" id="research-verification-reason"></p><ol class="research-gates" id="research-gates" aria-label="可信改写的三道关卡"></ol><div class="research-chips" id="research-rewrite-stats"></div><div class="comparison-grid" id="research-comparison"></div><div class="suggestion-code-header"><span>候选 SQL</span><div><button class="text-button" id="copy-research-candidate">复制</button><button class="secondary-button" id="import-research-candidate" disabled>填入编辑器</button></div></div><pre class="suggestion-code" id="research-candidate-output"></pre><p class="research-message" id="research-recommendation"></p><ul class="research-warnings" id="research-optimize-warnings"></ul><details class="tool-details"><summary>查看验证详情</summary><pre id="research-optimize-json"></pre></details></div></section>
+
+          <section class="research-section" aria-labelledby="research-optimizer-heading"><div class="research-section-heading"><h3 id="research-optimizer-heading">自适应优化</h3><button class="text-button" id="toggle-join-demo" aria-expanded="false" aria-controls="research-join-demo">PPT 用例</button></div><p class="tool-note">采集当前数据统计，再观察模式、学习样本与计划缓存。模式切换只影响后续查询。</p><div class="research-controls"><div><label class="field-label" for="research-optimizer-mode">优化器模式</label><select id="research-optimizer-mode"><option value="heuristic">启发式</option><option value="adaptive">自适应</option></select></div><button class="secondary-button" id="apply-research-optimizer">应用模式</button><button class="primary-button" id="run-research-analyze">采集统计</button></div><div class="tool-error" id="research-optimizer-error" role="alert" hidden></div><p class="research-message" id="research-optimizer-result" aria-live="polite"></p><details class="tool-details" id="research-analyze-detail" hidden><summary>查看采集统计</summary><pre id="research-analyze-json"></pre></details>
+            <div id="research-join-demo" hidden>
+              <h4>CS 学生选课：同一 SQL，两种执行策略</h4>
+              <pre class="suggestion-code" id="join-demo-sql">SELECT p.id, c.id
+FROM registrations r
+JOIN classes c ON r.class_id=c.id
+JOIN people p ON r.person_id=p.id
+WHERE p.department='CS';</pre>
+              <div class="research-actions"><button class="primary-button" id="run-join-demo">运行用例对比</button></div>
+              <p class="research-message" id="join-demo-message" role="status" hidden></p>
+              <div class="tool-error" id="join-demo-error" role="alert" hidden></div>
+              <div id="join-demo-output" hidden aria-live="polite">
+                <div class="comparison-verdict" id="join-demo-verdict"></div>
+                <div class="comparison-grid" id="join-demo-comparison"></div>
+                <details class="tool-details"><summary>查看查询结果</summary><div class="research-table-container" id="join-demo-table"></div></details>
+                <details class="tool-details"><summary>查看学习模型与原始证据</summary><pre id="join-demo-json"></pre></details>
+              </div>
+            </div>
+          </section>
+
+          <section class="research-section" aria-labelledby="research-buffer-heading"><h3 id="research-buffer-heading">缓存策略</h3><p class="tool-note">选择 LRU 或预测淘汰策略。效果以当前实例的命中、读取和回退计数为准；采样数范围 1–4096。</p><div class="research-controls"><div><label class="field-label" for="research-buffer-policy">缓存策略</label><select id="research-buffer-policy"><option value="lru">LRU</option><option value="predictive">预测策略</option></select></div><div class="research-number-field"><label class="field-label" for="research-buffer-sample">采样数</label><input type="number" id="research-buffer-sample" value="8" min="1" max="4096" step="1"></div><button class="primary-button" id="apply-research-buffer">应用策略</button></div><div class="tool-error" id="research-buffer-error" role="alert" hidden></div><p class="research-message" id="research-buffer-result" aria-live="polite"></p></section>
+
+          <section class="research-section" aria-labelledby="research-semantic-heading">
+            <div class="research-section-heading"><h3 id="research-semantic-heading">语义查询</h3><button class="secondary-button" id="load-research-semantic-example">填入课程示例</button></div>
+            <p class="tool-note">从上方 SELECT 的结果中选择一个文本字段，执行筛选、分类或按标签计数。</p><p class="semantic-data-note" id="research-semantic-source">仅本次选择的字段文本将发送给配置模型；不会发送其他字段。实际模式待读取。</p>
+            <div class="research-controls semantic-controls">
+              <div><label class="field-label" for="research-semantic-column">结果字段</label><input type="text" id="research-semantic-column" list="research-semantic-columns" value="title" placeholder="例如 title" autocomplete="off"><datalist id="research-semantic-columns"></datalist></div>
+              <div><label class="field-label" for="research-semantic-operation">操作</label><select id="research-semantic-operation"><option value="filter">语义筛选</option><option value="classify">逐行分类</option><option value="aggregate">按标签计数</option></select></div>
+              <div class="research-number-field"><label class="field-label" for="research-semantic-batch">每批行数</label><input type="number" id="research-semantic-batch" min="1" max="16" value="8" step="1"></div>
+              <div class="research-number-field"><label class="field-label" for="research-semantic-budget">行数预算</label><input type="number" id="research-semantic-budget" min="1" value="64" step="1"></div>
+              <div class="research-number-field"><label class="field-label" for="research-semantic-calls">调用预算</label><input type="number" id="research-semantic-calls" min="1" max="32" value="8" step="1"></div>
+              <div class="research-number-field"><label class="field-label" for="research-semantic-seconds">时间预算（秒）</label><input type="number" id="research-semantic-seconds" min="1" max="90" value="30" step="1"></div>
+            </div>
+            <label class="field-label" for="research-semantic-prompt">判断条件或分类要求</label><textarea class="research-textarea" id="research-semantic-prompt" rows="3" maxlength="8000">关键词：数据库|查询|索引</textarea><p class="tool-note">本地规则模式只支持显式关键词提示；远程模式可输入自然语言要求。预算不足时由服务器报错，不返回部分结果。</p><div class="research-actions"><button class="secondary-button" id="clear-research-semantic-cache">清除推理缓存</button><button class="primary-button" id="run-research-semantic" disabled>运行语义查询</button></div><div class="tool-error" id="research-semantic-error" role="alert" hidden></div><p class="research-message" id="research-semantic-cache-result" aria-live="polite"></p><div id="research-semantic-output" hidden aria-live="polite"><p class="research-message" id="research-semantic-provider"></p><div class="research-chips" id="research-semantic-stats"></div><p class="research-message" id="research-semantic-explanation"></p><div class="research-table-container" id="research-semantic-table"></div><details class="tool-details"><summary>查看语义查询详情</summary><pre id="research-semantic-json"></pre></details></div>
+          </section>
+        </div>
+      </section>
+      <footer class="workspace-footer"><span>AuroraDB</span><span>仅本机访问 · 页大小 4 KiB</span></footer>
+      <div class="toast" id="toast" role="status" hidden></div>
+    </main>
+  </div>
+</body>
+</html>

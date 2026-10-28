@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-10-25T11:22:11.126381+08:00",
+  "passed": true,
+  "documents": [
+    {
+      "document": "AuroraDB_项目论文.pdf",
+      "pages": 16,
+      "sha256": "0031fd6aa2958ceef6628d258467b113b440b8627b8180dfc08f7891cf69ffd3",
+      "empty_pages": [],
+      "outside_page_chars": []
+    },
+    {
+      "document": "AuroraDB_设计与测试报告.pdf",
+      "pages": 19,
+      "sha256": "fad89f8fa315de69cb1141f6e5119cae4c3ac3a34b773da46f80bef637e151f2",
+      "empty_pages": [],
+      "outside_page_chars": []
+    },
+    {
+      "document": "AuroraDB_使用说明.pdf",
+      "pages": 12,
+      "sha256": "ab62cff59dd1b1e033413da14acec55b293d08018a2bfcd30557f8e2f40df6b4",
+      "empty_pages": [],
+      "outside_page_chars": []
+    },
+    {
+      "document": "AuroraDB_四人答辩运行与讲解指南_最终.pdf",
+      "pages": 12,
+      "sha256": "ed8d65f6cdf9a52f9b8b6fcdeff51653c1ab5ebb36b7b5d38ca55dcbdc8faf41",
+      "empty_pages": [],
+      "outside_page_chars": []
+    }
+  ],
+  "total_pages": 59,
+  "visual_review": {
+    "passed": true,
+    "scope": "All generated PDF pages checked for blank pages and out-of-bounds text after Chinook documentation update.",
+    "defects": []
+  }
+}

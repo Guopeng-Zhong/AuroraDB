@@ -1,0 +1,26 @@
+AuroraDB 2026-10-23 独立复核记录
+
+结论：本轮找到并修复了以下可复现边界。已通过回归和最终可执行程序验收；不能据测试通过承诺零缺陷或生产级能力。
+
+已修复：
+1. SQL集合语义：DISTINCT/GROUP BY曾把TRUE与1、FALSE与0合并；已使用带类型的行签名。
+2. SQL连接与索引：JOIN比较结果类型、未知COALESCE类型的IN预检以及索引IN提前集合去重已修复。
+3. WAL恢复：完整未知尾帧或仅有帧头时，原解析游标可能误清日志；现以有效B/P前缀末尾判定，保留日志并拒绝恢复。
+4. 网络总时限：等待、DNS、TLS、写入、响应读取均由调用方总deadline约束；传输任务最多2个，取消后不迟到发送。
+5. 前后端超时契约：前端曾固定105秒；现按公开timeout_seconds加15秒等待，最大315秒。
+6. 模型输出保护：Unicode转义后的标签凭证、孤立代理字符、非assistant角色及旧式function_call均会拒绝，失败不缓存。
+7. HTTP输入：重复JSON字段、非有限数、非法Unicode、过深嵌套、未知字段和畸形请求地址均在执行前返回400。
+8. 交付隐私：打包器补排除任意目录的数据库文件、journal文件及Windows大小写变体；现有包未发现运行数据库或密钥泄漏。
+
+验证：自动测试249项；标准查询对照384次，额外边界对照684次，差异0；EXE研究验收22项；校园验收6项；真实浏览器验收6项。
+
+仍需如实说明：
+1. 本轮曾发生一次90秒内未取得学校API解释响应的情况；失败观察已保留，不能由重试成功推断长期稳定。学校配置现180秒。
+2. 系统DNS调用不能跨平台强制中断，已超时的任务可能暂占传输槽，直到DNS自行结束；任务数有界。
+3. RPM仅在单个AIService/进程内协调；同Key跨进程额度、TPM及周token配额由学校服务执行。
+4. 仅deepseek-chat完成真实小样本验收；其余模型别名、复杂语义准确率和长期负载尚未系统性测试。
+5. 教学内核仍无MVCC/账户系统、子查询/CTE/窗口/外键/复合键、磁盘溢写和VACUUM；B+删除不做合并回收。
+6. SQL研究执行预算为协作式检查，复杂规划并非硬实时中断；模型候选和语义标签不构成普遍正确性证明。
+
+证据与复现：docs/test_results.json、audit_queries.json、sql_edge_audit.json、campus_api_smoke.json、campus_api_timeout_observation.json、deep_review.json；tools/verify.py、tools/audit_queries.py、tools/sql_edge_audit.py、tools/campus_api_smoke.py --live。
+真实校园测试使用虚构课程数据。所有公开证据不含密钥或会话token。

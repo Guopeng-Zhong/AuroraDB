@@ -1,0 +1,1807 @@
+{
+  "config": {
+    "workload": "hot_points_with_large_scans",
+    "rows": 6000,
+    "capacity_pages": 24,
+    "sample_size": 8,
+    "trials": 5,
+    "order_seed": 20261028
+  },
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41"
+  },
+  "source_sha256": {
+    "before": "37ceee0536769535e710ea40a163bab85bb5b04d5bad31c494418c8484e728bf",
+    "after": "00a2b17acde1fe2a051c802806c72c90da278a1f99dd25c3ed78640e840d6b08"
+  },
+  "all_results_match": true,
+  "summary": {
+    "original_lru": {
+      "mean_total_ms": 412.2949646,
+      "median_total_ms": 408.455209,
+      "trials_ms": [
+        404.864458,
+        407.853285,
+        411.730316,
+        408.455209,
+        428.571555
+      ],
+      "mean_bookkeeping_ms": 1.4662022,
+      "mean_p95_ms": 0.47967244999999964,
+      "file_page_reads": [
+        3769
+      ]
+    },
+    "original_predictive": {
+      "mean_total_ms": 442.0678736,
+      "median_total_ms": 437.929736,
+      "trials_ms": [
+        423.652746,
+        417.157769,
+        437.929736,
+        466.930547,
+        464.66857
+      ],
+      "mean_bookkeeping_ms": 24.4367262,
+      "mean_p95_ms": 0.3547567099999995,
+      "file_page_reads": [
+        3673
+      ]
+    },
+    "optimized_lru": {
+      "mean_total_ms": 326.99433980000003,
+      "median_total_ms": 325.138276,
+      "trials_ms": [
+        325.138276,
+        324.596014,
+        323.668877,
+        328.10933,
+        333.459202
+      ],
+      "mean_bookkeeping_ms": 1.5002372,
+      "mean_p95_ms": 0.3536183699999996,
+      "file_page_reads": [
+        3769
+      ]
+    },
+    "optimized_predictive": {
+      "mean_total_ms": 249.4643392,
+      "median_total_ms": 245.573609,
+      "trials_ms": [
+        239.711931,
+        240.359775,
+        245.573609,
+        250.578268,
+        271.098113
+      ],
+      "mean_bookkeeping_ms": 8.138858,
+      "mean_p95_ms": 0.3103041999999998,
+      "file_page_reads": [
+        3584
+      ]
+    }
+  },
+  "runs": [
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 0,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3673,
+      "file_page_bytes": 15044608,
+      "hit_ratio": 0.29797400611620795,
+      "total_operation_ms": 423.652746,
+      "operation_p50_ms": 0.2306125,
+      "operation_p95_ms": 0.3177050499999985,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 4385.462729357798,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 467,
+          "elapsed_ms": 53.504737
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.897537
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.366023
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 52.89723699999999
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.132021
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 52.425869
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.955011
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.474311
+        }
+      },
+      "counters": {
+        "cache_hits": 1559,
+        "cache_misses": 3673,
+        "disk_reads": 3673,
+        "cache_evictions": 3649,
+        "predictive_evictions": 3649,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 29192,
+        "cache_policy_cpu_ns": 22944741,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 0,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 325.138276,
+      "operation_p50_ms": 0.2307075,
+      "operation_p95_ms": 0.32809394999999975,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 286.0147171253823,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 39.697680999999996
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.272072000000016
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 44.836028
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.973910999999994
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 43.656954
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.97211999999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.09573900000001
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 38.633771
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1496429,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 0,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3584,
+      "file_page_bytes": 14680064,
+      "hit_ratio": 0.3149847094801223,
+      "total_operation_ms": 239.711931,
+      "operation_p50_ms": 0.2340675,
+      "operation_p95_ms": 0.2978447999999998,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 1493.5579128440368,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 468,
+          "elapsed_ms": 30.788192
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 29.871667999999996
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.734485000000003
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.719276000000004
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.280531
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.718706
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.276038000000003
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.323035000000004
+        }
+      },
+      "counters": {
+        "cache_hits": 1648,
+        "cache_misses": 3584,
+        "disk_reads": 3584,
+        "cache_evictions": 3560,
+        "predictive_evictions": 3560,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 216,
+        "cache_policy_cpu_ns": 7814295,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 3533
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 0,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 404.864458,
+      "operation_p50_ms": 0.232095,
+      "operation_p95_ms": 0.4710964499999997,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 268.24369266055044,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 53.06788599999999
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.42638300000001
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.52828599999999
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 52.10119000000001
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.694969000000015
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.63510099999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.67175300000002
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.73889000000001
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1403451,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 1,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3584,
+      "file_page_bytes": 14680064,
+      "hit_ratio": 0.3149847094801223,
+      "total_operation_ms": 240.359775,
+      "operation_p50_ms": 0.23150900000000002,
+      "operation_p95_ms": 0.2736741,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 1523.7589831804282,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 468,
+          "elapsed_ms": 30.41589
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 29.799446999999986
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.586082000000005
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 31.323539999999998
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.378601000000007
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 31.787808999999996
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 28.98479100000001
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.083614999999998
+        }
+      },
+      "counters": {
+        "cache_hits": 1648,
+        "cache_misses": 3584,
+        "disk_reads": 3584,
+        "cache_evictions": 3560,
+        "predictive_evictions": 3560,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 216,
+        "cache_policy_cpu_ns": 7972307,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 3533
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 1,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3673,
+      "file_page_bytes": 15044608,
+      "hit_ratio": 0.29797400611620795,
+      "total_operation_ms": 417.157769,
+      "operation_p50_ms": 0.232611,
+      "operation_p95_ms": 0.26938449999999997,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 4197.934824159021,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 467,
+          "elapsed_ms": 52.763622
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 52.839710000000004
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.565839999999966
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.653342000000016
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.98597699999999
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 52.925012999999986
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.66223699999998
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 51.762027999999994
+        }
+      },
+      "counters": {
+        "cache_hits": 1559,
+        "cache_misses": 3673,
+        "disk_reads": 3673,
+        "cache_evictions": 3649,
+        "predictive_evictions": 3649,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 29192,
+        "cache_policy_cpu_ns": 21963595,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 1,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 407.853285,
+      "operation_p50_ms": 0.232481,
+      "operation_p95_ms": 0.4757130999999996,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 278.8895259938838,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 50.389687999999964
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.759722000000025
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 54.80291800000003
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.864106
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.80235399999999
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.71451300000001
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 52.213004999999995
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 51.30697899999999
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1459150,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 1,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 324.596014,
+      "operation_p50_ms": 0.233657,
+      "operation_p95_ms": 0.3566691999999999,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 282.72266819571865,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 40.88066900000002
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.73195199999999
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.26969600000001
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.28204100000002
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.558372
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.95485299999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 42.267399
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 41.651031999999994
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1479205,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 2,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 411.730316,
+      "operation_p50_ms": 0.233642,
+      "operation_p95_ms": 0.4741216499999999,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 294.5699541284404,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 52.22227300000001
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 54.045027
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 52.752339000000006
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.23704500000001
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 51.472713000000006
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.641014999999996
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.29376100000002
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.066143000000004
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1541190,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 2,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 323.668877,
+      "operation_p50_ms": 0.23278100000000002,
+      "operation_p95_ms": 0.3477283999999995,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 290.0131880733945,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 39.611321000000004
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 42.274902000000004
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.13270499999999
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.17090100000001
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.117248000000004
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.27822900000001
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.40639700000003
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.677174
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1517349,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 2,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3584,
+      "file_page_bytes": 14680064,
+      "hit_ratio": 0.3149847094801223,
+      "total_operation_ms": 245.573609,
+      "operation_p50_ms": 0.23516900000000002,
+      "operation_p95_ms": 0.32020929999999975,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 1576.151376146789,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 468,
+          "elapsed_ms": 30.71381899999999
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 30.438617
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.984947000000002
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.947501999999993
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 31.582764999999995
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.875414000000006
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.656452
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 31.374092999999988
+        }
+      },
+      "counters": {
+        "cache_hits": 1648,
+        "cache_misses": 3584,
+        "disk_reads": 3584,
+        "cache_evictions": 3560,
+        "predictive_evictions": 3560,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 216,
+        "cache_policy_cpu_ns": 8246424,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 3533
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 2,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3673,
+      "file_page_bytes": 15044608,
+      "hit_ratio": 0.29797400611620795,
+      "total_operation_ms": 437.929736,
+      "operation_p50_ms": 0.231574,
+      "operation_p95_ms": 0.343784,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 4525.649082568807,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 467,
+          "elapsed_ms": 56.577862
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.64206200000002
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.254126
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.03928199999997
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 52.892613
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.555350000000026
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.42999199999999
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 58.538449
+        }
+      },
+      "counters": {
+        "cache_hits": 1559,
+        "cache_misses": 3673,
+        "disk_reads": 3673,
+        "cache_evictions": 3649,
+        "predictive_evictions": 3649,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 29192,
+        "cache_policy_cpu_ns": 23678196,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 3,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 328.10933,
+      "operation_p50_ms": 0.234654,
+      "operation_p95_ms": 0.3783662499999995,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 280.81001529051986,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 42.806137
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.160335
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.12579500000001
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.085441999999986
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 41.110899
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 44.32483899999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 39.820305
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.675577999999994
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1469198,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 3,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3673,
+      "file_page_bytes": 15044608,
+      "hit_ratio": 0.29797400611620795,
+      "total_operation_ms": 466.930547,
+      "operation_p50_ms": 0.2339425,
+      "operation_p95_ms": 0.3560456499999999,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 5371.695527522936,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 467,
+          "elapsed_ms": 56.15114900000001
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.55666499999999
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.97199700000001
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.944704
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.64224700000001
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.362111
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 86.03337800000006
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 54.268296
+        }
+      },
+      "counters": {
+        "cache_hits": 1559,
+        "cache_misses": 3673,
+        "disk_reads": 3673,
+        "cache_evictions": 3649,
+        "predictive_evictions": 3649,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 29192,
+        "cache_policy_cpu_ns": 28104711,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 3,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 408.455209,
+      "operation_p50_ms": 0.231984,
+      "operation_p95_ms": 0.4724486999999999,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 273.4594801223242,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 51.757487000000005
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 51.38258399999999
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 53.43305099999999
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 51.17195699999999
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.93194499999999
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.84804399999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.972226000000006
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 49.95791500000001
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1430740,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 3,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3584,
+      "file_page_bytes": 14680064,
+      "hit_ratio": 0.3149847094801223,
+      "total_operation_ms": 250.578268,
+      "operation_p50_ms": 0.23271550000000002,
+      "operation_p95_ms": 0.32830349999999975,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 1587.9701834862385,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 468,
+          "elapsed_ms": 32.40090099999999
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 30.71636599999999
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.858172999999997
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.293397000000002
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.942513
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.85415899999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 32.828881
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 33.683878
+        }
+      },
+      "counters": {
+        "cache_hits": 1648,
+        "cache_misses": 3584,
+        "disk_reads": 3584,
+        "cache_evictions": 3560,
+        "predictive_evictions": 3560,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 216,
+        "cache_policy_cpu_ns": 8308260,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 3533
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 4,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 333.459202,
+      "operation_p50_ms": 0.23789300000000002,
+      "operation_p95_ms": 0.35723404999999936,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 294.15233180428135,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 40.070885999999994
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.333501000000005
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 43.32475599999998
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.51555499999998
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 40.33787999999999
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 42.43709100000002
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 42.087503
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 44.35202999999997
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1539005,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 4,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3584,
+      "file_page_bytes": 14680064,
+      "hit_ratio": 0.3149847094801223,
+      "total_operation_ms": 271.098113,
+      "operation_p50_ms": 0.23831449999999998,
+      "operation_p95_ms": 0.3314892999999998,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 1596.5221712538225,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 468,
+          "elapsed_ms": 38.113534999999985
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 42.021991
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.790117000000013
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 29.807300999999995
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.221733000000004
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 37.996661
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 31.335110999999998
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 443,
+          "elapsed_ms": 30.811664
+        }
+      },
+      "counters": {
+        "cache_hits": 1648,
+        "cache_misses": 3584,
+        "disk_reads": 3584,
+        "cache_evictions": 3560,
+        "predictive_evictions": 3560,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 216,
+        "cache_policy_cpu_ns": 8353004,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 3533
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "optimized_predictive"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "lru",
+      "sample_size": 8,
+      "trial": 4,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3769,
+      "file_page_bytes": 15437824,
+      "hit_ratio": 0.27962538226299694,
+      "total_operation_ms": 428.571555,
+      "operation_p50_ms": 0.237623,
+      "operation_p95_ms": 0.5049823499999991,
+      "operation_p95_file_reads": 2.0,
+      "policy_bookkeeping_ns_per_access": 286.02446483180427,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 479,
+          "elapsed_ms": 51.79993100000001
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 59.137009000000006
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 52.93168699999998
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.91641800000002
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.06149800000001
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 50.30738299999999
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 60.18973399999999
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 470,
+          "elapsed_ms": 53.22789499999998
+        }
+      },
+      "counters": {
+        "cache_hits": 1463,
+        "cache_misses": 3769,
+        "disk_reads": 3769,
+        "cache_evictions": 3745,
+        "predictive_evictions": 0,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 0,
+        "cache_policy_cpu_ns": 1496480,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "lru",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 0,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_lru"
+    },
+    {
+      "workload": "hot_points_with_large_scans",
+      "capacity_pages": 24,
+      "policy": "predictive",
+      "sample_size": 8,
+      "trial": 4,
+      "operations": 520,
+      "returned_rows": 48512,
+      "matched_oracle": true,
+      "result_sha256": "f1f5fe5668ea5c3eb461722b0f32ada92a71c0590f8d537572f5ce5e3bf6aba0",
+      "file_page_reads": 3673,
+      "file_page_bytes": 15044608,
+      "hit_ratio": 0.29797400611620795,
+      "total_operation_ms": 464.66857,
+      "operation_p50_ms": 0.240587,
+      "operation_p95_ms": 0.48686434999999917,
+      "operation_p95_file_reads": 0.0,
+      "policy_bookkeeping_ns_per_access": 4872.398318042813,
+      "phase_metrics": {
+        "0": {
+          "operations": 65,
+          "file_page_reads": 467,
+          "elapsed_ms": 61.075013
+        },
+        "1": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 58.15610399999998
+        },
+        "2": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.222581000000005
+        },
+        "3": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 63.48554399999998
+        },
+        "4": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.918673999999996
+        },
+        "5": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 53.666064999999996
+        },
+        "6": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 59.921862000000004
+        },
+        "7": {
+          "operations": 65,
+          "file_page_reads": 458,
+          "elapsed_ms": 61.22272699999999
+        }
+      },
+      "counters": {
+        "cache_hits": 1559,
+        "cache_misses": 3673,
+        "disk_reads": 3673,
+        "cache_evictions": 3649,
+        "predictive_evictions": 3649,
+        "predictive_fallbacks": 0,
+        "predictive_samples": 29192,
+        "cache_policy_cpu_ns": 25492388,
+        "scan_page_accesses": 3696,
+        "predictive_admission_bypasses": 0
+      },
+      "policy_status": {
+        "policy": "predictive",
+        "sample_size": 8,
+        "active_scans": 0,
+        "history_pages": 96,
+        "history_limit": 96,
+        "seed": 20261010,
+        "prediction": "explicit next-page scan hints; decaying weighted access history",
+        "fallback": "LRU when sampled pages have no scan evidence",
+        "scope": "committed read copies only",
+        "persistent": false
+      },
+      "variant": "original_predictive"
+    }
+  ]
+}

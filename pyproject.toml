@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auroradb-edu"
+version = "1.2.0"
+description = "An inspectable educational relational database with a custom page engine"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+auroradb = "auroradb.__main__:main"
+
+[tool.setuptools]
+packages = ["auroradb"]
+
+[tool.setuptools.package-data]
+auroradb = ["web/*", "examples/*"]

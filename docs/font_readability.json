@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-10-09T17:40:21.746829+08:00",
+  "passed": true,
+  "method": "Native IAB visual review and read-only computed-style observations through CUA",
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 900,
+      "document_overflow": false
+    },
+    {
+      "width": 757,
+      "height": 1235,
+      "document_overflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "document_overflow": false
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "document_overflow": false
+    }
+  ],
+  "font_px": {
+    "editor": 16,
+    "highlight": 16,
+    "line_numbers": 16,
+    "table_desktop": 16,
+    "table_mobile": 15,
+    "buttons": 15,
+    "helper_text": 13,
+    "ai_input": 16
+  },
+  "editor_line_height_px": 28,
+  "mobile_ligatures": "none",
+  "mobile_gutter_px": 52,
+  "observations": [
+    "Editor, highlight and gutter have matching 16px fonts and 28px line height at desktop and mobile sizes",
+    "At 320px width, 1006-line draft scroll positions match across editor/highlight/gutter and four-digit line numbers are visually intact",
+    "Mobile AI, comparison and integrity panels do not overflow horizontally",
+    "Original SQL and AI input drafts restored after layout verification",
+    "No captured browser console errors"
+  ],
+  "source_sha256": {
+    "auroradb/web/app.js": "07ccc662e7583c3e5fcd19cc8eb367a6a977b74b6b46574ac0b0707ac00070fd",
+    "auroradb/web/favicon.svg": "66ef2e5457e4a49e1dcd980eb8e99e35950a999667919be57c085dfeaeba756a",
+    "auroradb/web/index.html": "6ccecf97b688e5536b7eb06cc1438e90b6783248fb0e6bc606fcae4702ab1f51",
+    "auroradb/web/styles.css": "39f7dc30c9518b4e298fc47c778d093a6cbf3ba2602d5d5ce1b790d6e78ce974"
+  },
+  "screenshots": [
+    "workbench-fonts.jpg",
+    "mobile-fonts.jpg"
+  ]
+}

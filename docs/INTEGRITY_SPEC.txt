@@ -1,0 +1,95 @@
+AuroraDB 全库一致性检查说明
+核对依据：auroradb/integrity.py、tests/test_integrity.py
+
+1. 使用入口
+
+  SQL：CHECK DATABASE;
+  Python：Database.integrity_check()
+  HTTP：POST /api/integrity，JSON 请求体 {}，携带当前会话 Token。
+
+结果包含 ok、view、summary、checks、tables、issues、issue_count、error_count、
+issues_truncated 和 elapsed_ms。SQL 结果同时提供便于阅读的检查/问题行与完整
+result.integrity 对象。ok 由全部检测到的错误决定，不因问题列表截断而变成 true。
+低层 check_database(db, max_issues=100) 默认最多展示 100 个问题，继续统计全部
+问题数量；max_issues 可取 1–10000 的整数。info 不计入 error_count。
+
+2. 检测范围
+
+  页文件：核对文件长度和已提交页分配边界；逐页核验页头、CRC32、有限 JSON、
+  已知页类型、基础条目/引用格式。检查包含当前分配范围内的 retained 页。
+
+  目录：检查页 0 类型、manifest 页号范围和唯一性、chunk ordinal、base64 与
+  目录 JSON 结构。非活动事务时，解码的已提交目录须与当前内存目录一致。
+
+  表结构：检查非空列集合、唯一列名、支持的类型、约束标志、默认值与主键元
+  数据；PRIMARY KEY 必须同时具备 UNIQUE 和 NOT NULL。
+
+  堆记录：检查堆页归属、重复页引用、占用槽、完整列字段、稳定 RID、转发页
+  范围和类型、页独占归属、row_count、插入序号与插入提示。转发只支持一个
+  overflow 页；不会沿未知对象递归追踪。占用但损坏的槽仍计入实际槽数。
+
+  约束：检查行字段、类型、文本长度、NOT NULL 和 UNIQUE/PRIMARY KEY；唯一
+  约束忽略 NULL，数值 1 和 1.0 按相同键处理。约束列必须存在受保护的唯一
+  索引。检查独立于索引返回的结果，能发现 CRC 合法的逻辑损坏。
+
+  索引：检查索引名、列、根与页引用；带 visited 集合进行树遍历，拒绝循环
+  或重复节点。随后调用 BPlusTree.validate() 检查键顺序、separator fence、
+  叶深度和链表拓扑，只有通过后才扫描 items()。对每个非 NULL 堆键/RID 与
+  索引键/RID 双向核对，报告缺失项、多余项、悬空 RID、错误键、唯一索引重复
+  键。JSON 对照保留 boolean/integer/real/text 的表示区别。
+
+summary 的 pages 是当前分配页数；checked_pages 是成功解码并检查基础结构的
+当前视图页数；crc_checked_pages 是其中从已提交文件读取且 CRC 合格的页数。
+staged_pages 不计入 crc_checked_pages，因为暂存页尚未形成磁盘页镜像。
+rows 统计被访问的占用堆槽，tables/indexes 统计当前目录中被遍历的对象。
+如果元数据损坏导致后续范围无法安全检查，报告对应错误，而不会宣称全库正常。
+
+3. retained 页与当前事务视图
+
+系统暂未实现物理页回收。DROP TABLE/INDEX、缩小目录或缩回短记录后，旧页
+可能仍然分配但不再由当前目录引用。它们计入 retained_pages，并提供 info。
+“不可达”本身不视为损坏；retained 页的 CRC/基础页结构损坏仍然是 error。
+
+无活动事务时 view='committed'。活动事务时 view='current transaction'，
+检查当前内存目录及暂存优先的页版本，包含未提交插入和分配的新页。未暂存页
+从已提交文件读取。暂存覆盖的旧物理页内容不单独核验；结果不能解释为旧物理
+版本和事务版本同时通过。ROLLBACK 后再次检查会回到已提交视图。
+
+4. 只读保证
+
+检查获取 Database 的可重入锁，采用独立只读文件句柄；绕过 LRU 读取已提交
+页，因此暖缓存不能隐藏磁盘 CRC 损坏。对暂存页仅复制和校验，不修改其内容。
+不会执行 SQL，不分配页、不修复记录、不提交或回滚、不做 checkpoint，也不
+清空 WAL；不会改变缓存、目录、暂存写集或数据库 I/O 统计。
+
+关闭或 poisoned（提交结果尚需恢复）的连接拒绝检查，须重新打开并完成已有
+WAL 恢复流程。结构损坏和 I/O 错误会尽可能转为问题项，安全范围内继续检查；
+MemoryError 等资源故障保留异常语义，不能伪装成普通数据损坏或成功报告。
+
+5. 明确限制
+
+  CRC32 是偶发损坏检测，不是密码签名，不提供抗恶意篡改证明。
+  本检查不验证 redo.wal 的完整帧/事务摘要协议，不替代启动恢复、恢复测试或
+  备份。WAL 的验证与恢复由 DiskPager 的已有机制负责。
+  不检查数据库目录以外的文件、其他进程的状态或操作系统缓存可靠性。
+  只覆盖本项目支持的 SQL 类型、单列约束与单列 B+ 树；不存在的外键、CHECK、
+  复合索引等功能不能据此宣称已通过。
+  不提供自动修复或物理回收；不会将 retained 页自动删除。
+  完整检查会读取全部已分配页，并为每张表建立 RID/行与索引对照，使用与被
+  检查数据规模相关的时间和内存。检查持锁，其他同连接查询需要等待完成。
+
+6. 验证证据
+
+tests/test_integrity.py 当前有 20 项自动化测试，纳入常规 verify.py。覆盖正常
+库、活动事务和 rollback、暖缓存中的物理损坏、CRC 合法的缺项/多项/错误键、
+转发与旧 overflow、跨叶重复键、lazy delete、共享页、循环、schema/NULL/unique
+破坏、目录 ordinal、文件尾部异常、问题截断和资源故障。
+
+本轮额外手工执行了 209 次异常元数据替换：19 个目录字段路径 × 11 类异常值，
+均产生诊断报告且无未处理异常。这是本轮一次性补充审查，不是 verify.py 自动
+重跑的测试项，也不是对全部潜在损坏形式的穷举证明。
+
+集成后另在临时数据库和随机端口独立执行 8 项入口检查：HTTP 只读成功、Token
+拒绝、跨来源拒绝、活动事务视图保留暂存、SQL 入口检查、逻辑损坏的结构化失败
+报告且不回滚、rollback 后 Python 入口恢复正常、poisoned HTTP 拒绝。全部通过。
+这些也是本轮一次性入口复核，未单独增加到 verify.py 的自动化用例数量。

@@ -1,0 +1,83 @@
+{
+  "format_version": 1,
+  "generated_at": "2026-10-25T03:15:02.601108+00:00",
+  "passed": true,
+  "provider": "SJTU campus API",
+  "model": "deepseek-chat",
+  "scope": "Packaged EXE, actual campus model, synthetic course dataset only.",
+  "requests_per_minute": 10,
+  "planned_remote_calls": 4,
+  "configured_timeout_seconds": 180,
+  "exe_sha256": "953f0845572d5b016f099af2bcf742936ddd07c9885dccc4721a252a5437637b",
+  "source_sha256": {
+    "auroradb/ai.py": "a635848c63e2d44e74a8e31135fce61d83a5f7e2b45d300f60f475107b1b87dc",
+    "auroradb/__main__.py": "0f1d69012a31376c18020c66f443fc518458ceb2d460fc4354c81cce137249f8",
+    "auroradb/server.py": "e1645229be0bbe220b18e15b3aef006f7aa61f53e84aa88c8f0f968c9f9bd5c8",
+    "tools/campus_api_smoke.py": "a25b407fd459bce4945ee2c62616b276c31a62bb4e059ce8f6d1e8eb766aed21"
+  },
+  "limitations": [
+    "A small connectivity/function smoke check, not a model accuracy benchmark.",
+    "Other authorized models, token quota and long-run rate limits were not measured.",
+    "No user database or private records were sent."
+  ],
+  "checks": [
+    {
+      "name": "school profile loads in packaged EXE without exposing the key",
+      "passed": true,
+      "elapsed_seconds": 0.0,
+      "observed": {
+        "model": "deepseek-chat",
+        "requests_per_minute": 10
+      }
+    },
+    {
+      "name": "real SQL generation compiles and matches the known fixture",
+      "passed": true,
+      "elapsed_seconds": 22.422,
+      "observed": {
+        "sql_compiled": true,
+        "fixture_result_matches": true,
+        "rows": 4
+      }
+    },
+    {
+      "name": "real SQL explanation preserves a valid read-only query",
+      "passed": true,
+      "elapsed_seconds": 23.718,
+      "observed": {
+        "nonempty_explanation": true,
+        "sql_compiled": true
+      }
+    },
+    {
+      "name": "real model candidate passes the local trusted optimizer pipeline",
+      "passed": true,
+      "elapsed_seconds": 23.828,
+      "observed": {
+        "matched": true,
+        "verification_level": "proven",
+        "recommended": false
+      }
+    },
+    {
+      "name": "real semantic filter and warm-cache reuse match the labelled fixture",
+      "passed": true,
+      "elapsed_seconds": 8.329,
+      "observed": {
+        "fixture_result_matches": true,
+        "first_calls": 1,
+        "warm_calls": 0,
+        "warm_cache_hits": 5
+      }
+    },
+    {
+      "name": "AI operations leave stored data intact and report successful transport",
+      "passed": true,
+      "elapsed_seconds": 0.031,
+      "observed": {
+        "row_counts_unchanged": true,
+        "last_request_succeeded": true
+      }
+    }
+  ]
+}
