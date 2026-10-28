@@ -1,0 +1,1265 @@
+{
+  "format_version": 1,
+  "generated_at": "2026-10-25T03:14:52.233354+00:00",
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "driver_python": "3.12.14"
+  },
+  "passed": true,
+  "checks": [
+    {
+      "name": "packaged EXE startup with ephemeral loopback port and local mock",
+      "passed": true,
+      "elapsed_ms": 280.771,
+      "details": {
+        "port": 64777,
+        "bind": "127.0.0.1",
+        "port_requested": 0,
+        "demo": true,
+        "browser_opened": false,
+        "model_mode": "mock"
+      }
+    },
+    {
+      "name": "bundled research HTML, JavaScript and readable light styles",
+      "passed": true,
+      "elapsed_ms": 46.919,
+      "details": {
+        "html_characters": 17882,
+        "javascript_characters": 53871,
+        "stylesheet_characters": 33513,
+        "theme": "light"
+      }
+    },
+    {
+      "name": "research status contracts and explicit nonremote mock mode",
+      "passed": true,
+      "elapsed_ms": 17.121,
+      "details": {
+        "optimizer": {
+          "mode": "heuristic",
+          "generation": 13,
+          "statistics": {
+            "available": false,
+            "generation": null,
+            "tables": 0
+          },
+          "learning": {
+            "cost_models": {
+              "TableScan": {
+                "samples": 0,
+                "ready": false,
+                "weights": null,
+                "training_mae": null
+              },
+              "IndexScan": {
+                "samples": 0,
+                "ready": false,
+                "weights": null,
+                "training_mae": null
+              }
+            },
+            "revision": 13,
+            "cardinality_models": {},
+            "observations": 0,
+            "estimation_ms": 0.0,
+            "cost_target": "cold application-buffer read time; OS cache retained"
+          },
+          "cache": {
+            "entries": 0,
+            "templates": 0,
+            "hits": 0,
+            "misses": 0,
+            "template_hits": 0,
+            "invalidations": 13
+          },
+          "buffer_signature": [
+            "lru",
+            8,
+            64
+          ],
+          "rules": [
+            {
+              "id": "or-equalities-to-in",
+              "description": "同列、类型兼容的等值 OR 合并为 IN；保留 NULL"
+            },
+            {
+              "id": "duplicate-and",
+              "description": "WHERE 中重复的确定性 AND 条件消除；三值逻辑保持"
+            },
+            {
+              "id": "where-true",
+              "description": "WHERE 的 TRUE 条件消除；只改变过滤谓词"
+            }
+          ],
+          "limitations": [
+            "只覆盖当前有限 SQL 子集和三条可信规则，未复现顶会完整系统。",
+            "proven 是可重放规则证据；tested 仅表示当前提交数据上的实测相同。",
+            "未知外部候选不会自动推荐替换；不执行数据或结构修改。",
+            "LIMIT/OFFSET 不参与对比；ORDER BY 必须保持并能由输出列核验。",
+            "模型不是跨数据库预训练模型，不保证任意 OOD 查询或数据漂移。",
+            "没有连接顺序搜索；成本只影响已有访问路径，准确 RID 计数保留。"
+          ],
+          "transaction_active": false
+        },
+        "buffer": {
+          "policy": "lru",
+          "sample_size": 8,
+          "active_scans": 0,
+          "history_pages": 0,
+          "history_limit": 256,
+          "seed": 20261010,
+          "prediction": "explicit next-page scan hints; decaying weighted access history",
+          "fallback": "LRU when sampled pages have no scan evidence",
+          "scope": "committed read copies only",
+          "persistent": false
+        },
+        "semantic": {
+          "entries": 0,
+          "capacity": 512,
+          "ttl_seconds": 300,
+          "hits": 0,
+          "misses": 0,
+          "evictions": 0,
+          "operations": [
+            "filter",
+            "classify",
+            "aggregate"
+          ],
+          "data_policy": "仅发送本次所选文本字段；NULL 不发送。",
+          "scope": "显式语义算子管线；未扩展 SQL 语法，不支持语义连接。"
+        },
+        "ai": {
+          "mode": "mock",
+          "provider": "本地规则演示",
+          "model": "",
+          "configured": true,
+          "available": true,
+          "message": "本地规则演示，没有调用远程模型。",
+          "timeout_seconds": 90.0,
+          "requests_per_minute": 0,
+          "requests_remaining": null,
+          "rate_limit_retry_after_seconds": 0,
+          "last_request_succeeded": null,
+          "last_success_age_seconds": null
+        }
+      }
+    },
+    {
+      "name": "CSRF and cross-origin rejection before research mutations",
+      "passed": true,
+      "elapsed_ms": 44.1,
+      "details": {
+        "missing_token_status": 403,
+        "cross_origin_status": 403,
+        "statistics_unchanged": true
+      }
+    },
+    {
+      "name": "typed DISTINCT/GROUP BY and nested boolean JOIN execute correctly in final EXE",
+      "passed": true,
+      "elapsed_ms": 31.083,
+      "details": {
+        "distinct_typed_values": 4,
+        "groups": 4,
+        "boolean_join_rows": 4,
+        "rolled_back": true
+      }
+    },
+    {
+      "name": "strict request contract rejects unknown fields before packaged SQL writes",
+      "passed": true,
+      "elapsed_ms": 31.528,
+      "details": {
+        "http_status": 400,
+        "stored_course_rows": 5
+      }
+    },
+    {
+      "name": "real statistics from bundled three-table dataset",
+      "passed": true,
+      "elapsed_ms": 15.162,
+      "details": {
+        "counts": {
+          "students": 12,
+          "courses": 5,
+          "enrollments": 19
+        },
+        "generation": 18,
+        "elapsed_ms": 1.194,
+        "page_reads": 3
+      }
+    },
+    {
+      "name": "adaptive and heuristic mode switching preserves query values",
+      "passed": true,
+      "elapsed_ms": 30.614,
+      "details": {
+        "adaptive_result": [
+          [
+            1005
+          ]
+        ],
+        "final_mode": "heuristic",
+        "learning": {
+          "cost_models": {
+            "TableScan": {
+              "samples": 0,
+              "ready": false,
+              "weights": null,
+              "training_mae": null
+            },
+            "IndexScan": {
+              "samples": 0,
+              "ready": false,
+              "weights": null,
+              "training_mae": null
+            }
+          },
+          "revision": 19,
+          "cardinality_models": {
+            "students.id:eq": {
+              "samples": 1,
+              "ready": false,
+              "weights": null,
+              "training_mae": null
+            }
+          },
+          "observations": 1,
+          "estimation_ms": 0.183,
+          "cost_target": "cold application-buffer read time; OS cache retained"
+        }
+      }
+    },
+    {
+      "name": "predictive and LRU policies through packaged HTTP controls",
+      "passed": true,
+      "elapsed_ms": 93.072,
+      "details": {
+        "predictive": {
+          "policy": "predictive",
+          "sample_size": 8,
+          "active_scans": 0,
+          "history_pages": 4,
+          "history_limit": 256,
+          "seed": 20261010,
+          "prediction": "explicit next-page scan hints; decaying weighted access history",
+          "fallback": "LRU when sampled pages have no scan evidence",
+          "scope": "committed read copies only",
+          "persistent": false,
+          "research": {
+            "mode": "heuristic",
+            "generation": 19,
+            "statistics": {
+              "available": true,
+              "generation": 19,
+              "tables": 3
+            },
+            "learning": {
+              "cost_models": {
+                "TableScan": {
+                  "samples": 0,
+                  "ready": false,
+                  "weights": null,
+                  "training_mae": null
+                },
+                "IndexScan": {
+                  "samples": 0,
+                  "ready": false,
+                  "weights": null,
+                  "training_mae": null
+                }
+              },
+              "revision": 20,
+              "cardinality_models": {},
+              "observations": 0,
+              "estimation_ms": 0.183,
+              "cost_target": "cold application-buffer read time; OS cache retained"
+            },
+            "cache": {
+              "entries": 0,
+              "templates": 0,
+              "hits": 0,
+              "misses": 0,
+              "template_hits": 0,
+              "invalidations": 19
+            },
+            "buffer_signature": [
+              "predictive",
+              8,
+              64
+            ],
+            "rules": [
+              {
+                "id": "or-equalities-to-in",
+                "description": "同列、类型兼容的等值 OR 合并为 IN；保留 NULL"
+              },
+              {
+                "id": "duplicate-and",
+                "description": "WHERE 中重复的确定性 AND 条件消除；三值逻辑保持"
+              },
+              {
+                "id": "where-true",
+                "description": "WHERE 的 TRUE 条件消除；只改变过滤谓词"
+              }
+            ],
+            "limitations": [
+              "只覆盖当前有限 SQL 子集和三条可信规则，未复现顶会完整系统。",
+              "proven 是可重放规则证据；tested 仅表示当前提交数据上的实测相同。",
+              "未知外部候选不会自动推荐替换；不执行数据或结构修改。",
+              "LIMIT/OFFSET 不参与对比；ORDER BY 必须保持并能由输出列核验。",
+              "模型不是跨数据库预训练模型，不保证任意 OOD 查询或数据漂移。",
+              "没有连接顺序搜索；成本只影响已有访问路径，准确 RID 计数保留。"
+            ],
+            "transaction_active": false
+          }
+        },
+        "predictive_query_stats": {
+          "cache_hits": 3,
+          "cache_misses": 4,
+          "disk_reads": 4,
+          "disk_writes": 14,
+          "cache_evictions": 0,
+          "staged_hits": 220,
+          "wal_bytes": 57762,
+          "wal_recoveries": 0,
+          "wal_cleanup_errors": 0,
+          "commits": 2,
+          "rollbacks": 1,
+          "predictive_evictions": 0,
+          "predictive_fallbacks": 0,
+          "predictive_samples": 0,
+          "cache_policy_cpu_ns": 15800,
+          "scan_page_accesses": 5,
+          "scan_contexts": 16,
+          "cache_size": 64,
+          "cache_used": 4,
+          "cache_policy": "predictive",
+          "predictive_sample_size": 8,
+          "cache_history_pages": 4,
+          "active_scans": 0,
+          "cached_pages": 4,
+          "staged_pages": 0,
+          "page_count": 12,
+          "page_size": 4096,
+          "transaction_active": false,
+          "poisoned": false,
+          "table_count": 3
+        },
+        "restored_policy": "lru"
+      }
+    },
+    {
+      "name": "trusted OR-to-IN proof with full submitted-data result comparison",
+      "passed": true,
+      "elapsed_ms": 3.563,
+      "details": {
+        "original_sql": "SELECT id FROM students WHERE id=1001 OR id=1005 ORDER BY id;",
+        "candidate_sql": "SELECT \"id\" FROM \"students\" WHERE (\"id\" IN (1001,1005)) ORDER BY \"id\" ASC;",
+        "verification": {
+          "level": "proven",
+          "matched": true,
+          "reason": "可信规则证据可重放",
+          "rules": [
+            "or-equalities-to-in"
+          ],
+          "certificate": {
+            "original_ast_sha256": "7268a9dbb95e46ca85c79abaf4ddb229ec9a43afabe84934493fa232ef159bc9",
+            "candidate_ast_sha256": "432f6725f37c8b124b450b749d4239fc0c25000b221dc7318f03d59a02e42c19",
+            "scope": "AuroraDB finite dialect; WHERE-only deterministic rules"
+          },
+          "comparison": "ordered-key-groups"
+        },
+        "original": {
+          "plan": {
+            "operator": "Sort",
+            "detail": "id ASC",
+            "estimated_rows": 6,
+            "children": [
+              {
+                "operator": "Project",
+                "detail": "id",
+                "estimated_rows": 6,
+                "children": [
+                  {
+                    "operator": "Filter",
+                    "detail": "Predicate pushed to base scan",
+                    "estimated_rows": 6,
+                    "children": [
+                      {
+                        "operator": "TableScan",
+                        "detail": "students",
+                        "estimated_rows": 12,
+                        "children": [],
+                        "access_cost": {
+                          "source": "heuristic",
+                          "fallback_reason": "no compatible single-column index"
+                        },
+                        "actual_rows": 12
+                      }
+                    ],
+                    "estimation": {
+                      "source": "heuristic",
+                      "reason": "adaptive statistics unavailable"
+                    },
+                    "actual_rows": 2,
+                    "q_error": 2.3333
+                  }
+                ],
+                "actual_rows": 2
+              }
+            ],
+            "actual_rows": 2
+          },
+          "row_count": 2,
+          "elapsed_ms": 0.2058,
+          "mad_ms": 0.0065,
+          "runs": [
+            {
+              "elapsed_ms": 0.2651,
+              "stats": {
+                "cache_hits": 0,
+                "cache_misses": 1,
+                "disk_reads": 1,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "cache_policy_cpu_ns": 800,
+                "scan_page_accesses": 1,
+                "scan_contexts": 1,
+                "rows_scanned": 12,
+                "index_lookups": 0,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.2058,
+              "stats": {
+                "cache_hits": 0,
+                "cache_misses": 1,
+                "disk_reads": 1,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "cache_policy_cpu_ns": 700,
+                "scan_page_accesses": 1,
+                "scan_contexts": 1,
+                "rows_scanned": 12,
+                "index_lookups": 0,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.1993,
+              "stats": {
+                "cache_hits": 0,
+                "cache_misses": 1,
+                "disk_reads": 1,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "cache_policy_cpu_ns": 700,
+                "scan_page_accesses": 1,
+                "scan_contexts": 1,
+                "rows_scanned": 12,
+                "index_lookups": 0,
+                "join_comparisons": 0
+              }
+            }
+          ],
+          "stats": {
+            "cache_hits": 0,
+            "cache_misses": 1,
+            "disk_reads": 1,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 700,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 12,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          },
+          "measurements": 3
+        },
+        "candidate": {
+          "plan": {
+            "operator": "Sort",
+            "detail": "id ASC",
+            "estimated_rows": 1,
+            "children": [
+              {
+                "operator": "Project",
+                "detail": "id",
+                "estimated_rows": 1,
+                "children": [
+                  {
+                    "operator": "Filter",
+                    "detail": "Predicate pushed to base scan",
+                    "estimated_rows": 1,
+                    "children": [
+                      {
+                        "operator": "IndexScan",
+                        "detail": "students using students_id_key; students.id IN (...)",
+                        "estimated_rows": 2,
+                        "children": [],
+                        "access_cost": {
+                          "source": "heuristic",
+                          "exact_candidate_rows": 2,
+                          "threshold_fraction": 0.35,
+                          "fallback_reason": "adaptive statistics unavailable or application cache warm"
+                        },
+                        "actual_rows": 2
+                      }
+                    ],
+                    "estimation": {
+                      "source": "heuristic",
+                      "reason": "adaptive statistics unavailable"
+                    },
+                    "actual_rows": 2,
+                    "q_error": 1.5
+                  }
+                ],
+                "actual_rows": 2
+              }
+            ],
+            "actual_rows": 2
+          },
+          "row_count": 2,
+          "elapsed_ms": 0.3327,
+          "mad_ms": 0.0186,
+          "runs": [
+            {
+              "elapsed_ms": 0.2584,
+              "stats": {
+                "cache_hits": 2,
+                "cache_misses": 2,
+                "disk_reads": 2,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "cache_policy_cpu_ns": 1100,
+                "scan_page_accesses": 0,
+                "scan_contexts": 0,
+                "rows_scanned": 2,
+                "index_lookups": 1,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.3327,
+              "stats": {
+                "cache_hits": 2,
+                "cache_misses": 2,
+                "disk_reads": 2,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "cache_policy_cpu_ns": 1500,
+                "scan_page_accesses": 0,
+                "scan_contexts": 0,
+                "rows_scanned": 2,
+                "index_lookups": 1,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.3513,
+              "stats": {
+                "cache_hits": 2,
+                "cache_misses": 2,
+                "disk_reads": 2,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "cache_policy_cpu_ns": 2200,
+                "scan_page_accesses": 0,
+                "scan_contexts": 0,
+                "rows_scanned": 2,
+                "index_lookups": 1,
+                "join_comparisons": 0
+              }
+            }
+          ],
+          "stats": {
+            "cache_hits": 2,
+            "cache_misses": 2,
+            "disk_reads": 2,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 1500,
+            "scan_page_accesses": 0,
+            "scan_contexts": 0,
+            "rows_scanned": 2,
+            "index_lookups": 1,
+            "join_comparisons": 0
+          },
+          "measurements": 3
+        },
+        "recommendation": {
+          "replace": false,
+          "sql": null,
+          "reason": "查询过短或收益未超过保守噪声门槛",
+          "benefit_ms": -0.1269,
+          "margin_ms": 1.0,
+          "speedup": 0.6186
+        },
+        "timings": {
+          "compile_ms": 0.3844,
+          "validation_ms": 1.7437,
+          "total_ms": 2.355,
+          "estimated_break_even_calls": null,
+          "optimizer_ms": 2.2237,
+          "model_ms": 0
+        },
+        "cache": {
+          "hit": false,
+          "template_hit": false,
+          "generation": 20,
+          "model_revision": 21
+        },
+        "warnings": [
+          "当前数据实测不构成任意数据库上的等价证明。"
+        ],
+        "cache_policy": "每次测量前清空应用缓冲池；操作系统缓存保留；三次中位数与 MAD。",
+        "model_calls": 0,
+        "model_mode": "local-rules"
+      }
+    },
+    {
+      "name": "exact-version conclusion cache is marked and does not pretend to remeasure",
+      "passed": true,
+      "elapsed_ms": 12.615,
+      "details": {
+        "cache": {
+          "hit": true,
+          "template_hit": true,
+          "generation": 20,
+          "model_revision": 21
+        },
+        "timings": {
+          "compile_ms": 0.5015,
+          "validation_ms": 0,
+          "total_ms": 0.645,
+          "estimated_break_even_calls": null,
+          "cached_experiment_ms": 2.2237,
+          "cached_validation_ms": 1.7437,
+          "request_ms": 0.6237,
+          "optimizer_ms": 0.6237,
+          "model_ms": 0
+        },
+        "warnings": [
+          "当前数据实测不构成任意数据库上的等价证明。",
+          "缓存结论来自同一数据/结构版本；当前请求未重复执行实验。"
+        ]
+      }
+    },
+    {
+      "name": "non-equivalent external candidate cannot become an importable recommendation",
+      "passed": true,
+      "elapsed_ms": 2.97,
+      "details": {
+        "verification": {
+          "level": "unknown",
+          "matched": false,
+          "reason": "当前提交数据发现结果或输出列差异；拒绝候选。",
+          "rules": [],
+          "certificate": null,
+          "comparison": "ordered-key-groups"
+        },
+        "recommendation": {
+          "replace": false,
+          "sql": null,
+          "reason": "结果不一致"
+        }
+      }
+    },
+    {
+      "name": "current-data coincidence is tested and cannot authorize an unknown rewrite",
+      "passed": true,
+      "elapsed_ms": 13.758,
+      "details": {
+        "verification": {
+          "level": "tested",
+          "matched": true,
+          "reason": "当前完整提交数据实测相同；没有通用等价证明。",
+          "rules": [],
+          "certificate": null,
+          "comparison": "multiset"
+        },
+        "recommendation": {
+          "replace": false,
+          "sql": null,
+          "reason": "未知改写只提供实验结果，不推荐自动替换"
+        }
+      }
+    },
+    {
+      "name": "write candidate rejected without executing model or candidate text",
+      "passed": true,
+      "elapsed_ms": 14.746,
+      "details": {
+        "status": 400,
+        "error": "诊断仅支持 SELECT，不执行数据或结构修改。",
+        "student_rows": 12
+      }
+    },
+    {
+      "name": "semantic filter cold and warm exact-text cache",
+      "passed": true,
+      "elapsed_ms": 45.697,
+      "details": {
+        "input_rows": 5,
+        "columns": [
+          "id",
+          "title"
+        ],
+        "rows": [
+          [
+            201,
+            "数据库原理"
+          ]
+        ],
+        "cold_stats": {
+          "model_calls": 0,
+          "batches": 1,
+          "cache_hits": 0,
+          "cache_misses": 5,
+          "unique_texts": 5,
+          "deduplicated_rows": 0,
+          "null_rows": 0,
+          "sql_elapsed_ms": 0.337,
+          "inference_elapsed_ms": 0.078,
+          "elapsed_ms": 0.464,
+          "budget_rows": 64,
+          "budget_calls": 8,
+          "budget_seconds": 30,
+          "sql_budget": {
+            "seconds": 6.0,
+            "scanned_rows": 100000,
+            "join_comparisons": 200000,
+            "intermediate_rows": 20000
+          },
+          "query": {
+            "cache_hits": 0,
+            "cache_misses": 1,
+            "disk_reads": 1,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 1100,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 5,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          }
+        },
+        "warm_stats": {
+          "model_calls": 0,
+          "batches": 0,
+          "cache_hits": 5,
+          "cache_misses": 0,
+          "unique_texts": 5,
+          "deduplicated_rows": 0,
+          "null_rows": 0,
+          "sql_elapsed_ms": 0.291,
+          "inference_elapsed_ms": 0.023,
+          "elapsed_ms": 0.358,
+          "budget_rows": 64,
+          "budget_calls": 8,
+          "budget_seconds": 30,
+          "sql_budget": {
+            "seconds": 6.0,
+            "scanned_rows": 100000,
+            "join_comparisons": 200000,
+            "intermediate_rows": 20000
+          },
+          "query": {
+            "cache_hits": 1,
+            "cache_misses": 0,
+            "disk_reads": 0,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 900,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 5,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          }
+        },
+        "mode": "mock",
+        "explanation": "本地关键词规则演示，没有调用大模型。",
+        "data_policy": "只发送所选字段的文本和判断条件；不发送其他列、原 SQL 或表结构。"
+      }
+    },
+    {
+      "name": "semantic classify cold and warm exact-text cache",
+      "passed": true,
+      "elapsed_ms": 46.717,
+      "details": {
+        "input_rows": 5,
+        "columns": [
+          "id",
+          "title",
+          "_semantic_match",
+          "_semantic_label"
+        ],
+        "rows": [
+          [
+            201,
+            "数据库原理",
+            true,
+            "数据库"
+          ],
+          [
+            202,
+            "数据结构",
+            false,
+            "其他"
+          ],
+          [
+            203,
+            "操作系统",
+            false,
+            "其他"
+          ],
+          [
+            204,
+            "计算机网络",
+            false,
+            "其他"
+          ],
+          [
+            205,
+            "软件工程实践",
+            false,
+            "其他"
+          ]
+        ],
+        "cold_stats": {
+          "model_calls": 0,
+          "batches": 1,
+          "cache_hits": 0,
+          "cache_misses": 5,
+          "unique_texts": 5,
+          "deduplicated_rows": 0,
+          "null_rows": 0,
+          "sql_elapsed_ms": 0.304,
+          "inference_elapsed_ms": 0.061,
+          "elapsed_ms": 0.409,
+          "budget_rows": 64,
+          "budget_calls": 8,
+          "budget_seconds": 30,
+          "sql_budget": {
+            "seconds": 6.0,
+            "scanned_rows": 100000,
+            "join_comparisons": 200000,
+            "intermediate_rows": 20000
+          },
+          "query": {
+            "cache_hits": 1,
+            "cache_misses": 0,
+            "disk_reads": 0,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 1100,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 5,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          }
+        },
+        "warm_stats": {
+          "model_calls": 0,
+          "batches": 0,
+          "cache_hits": 5,
+          "cache_misses": 0,
+          "unique_texts": 5,
+          "deduplicated_rows": 0,
+          "null_rows": 0,
+          "sql_elapsed_ms": 0.261,
+          "inference_elapsed_ms": 0.024,
+          "elapsed_ms": 0.328,
+          "budget_rows": 64,
+          "budget_calls": 8,
+          "budget_seconds": 30,
+          "sql_budget": {
+            "seconds": 6.0,
+            "scanned_rows": 100000,
+            "join_comparisons": 200000,
+            "intermediate_rows": 20000
+          },
+          "query": {
+            "cache_hits": 1,
+            "cache_misses": 0,
+            "disk_reads": 0,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 800,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 5,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          }
+        },
+        "mode": "mock",
+        "explanation": "本地关键词规则演示，没有调用大模型。",
+        "data_policy": "只发送所选字段的文本和判断条件；不发送其他列、原 SQL 或表结构。"
+      }
+    },
+    {
+      "name": "semantic aggregate cold and warm exact-text cache",
+      "passed": true,
+      "elapsed_ms": 32.11,
+      "details": {
+        "input_rows": 5,
+        "columns": [
+          "semantic_label",
+          "count"
+        ],
+        "rows": [
+          [
+            "其他",
+            4
+          ],
+          [
+            "数据库",
+            1
+          ]
+        ],
+        "cold_stats": {
+          "model_calls": 0,
+          "batches": 1,
+          "cache_hits": 0,
+          "cache_misses": 5,
+          "unique_texts": 5,
+          "deduplicated_rows": 0,
+          "null_rows": 0,
+          "sql_elapsed_ms": 0.266,
+          "inference_elapsed_ms": 0.049,
+          "elapsed_ms": 0.354,
+          "budget_rows": 64,
+          "budget_calls": 8,
+          "budget_seconds": 30,
+          "sql_budget": {
+            "seconds": 6.0,
+            "scanned_rows": 100000,
+            "join_comparisons": 200000,
+            "intermediate_rows": 20000
+          },
+          "query": {
+            "cache_hits": 1,
+            "cache_misses": 0,
+            "disk_reads": 0,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 900,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 5,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          }
+        },
+        "warm_stats": {
+          "model_calls": 0,
+          "batches": 0,
+          "cache_hits": 5,
+          "cache_misses": 0,
+          "unique_texts": 5,
+          "deduplicated_rows": 0,
+          "null_rows": 0,
+          "sql_elapsed_ms": 0.212,
+          "inference_elapsed_ms": 0.023,
+          "elapsed_ms": 0.271,
+          "budget_rows": 64,
+          "budget_calls": 8,
+          "budget_seconds": 30,
+          "sql_budget": {
+            "seconds": 6.0,
+            "scanned_rows": 100000,
+            "join_comparisons": 200000,
+            "intermediate_rows": 20000
+          },
+          "query": {
+            "cache_hits": 1,
+            "cache_misses": 0,
+            "disk_reads": 0,
+            "disk_writes": 0,
+            "cache_evictions": 0,
+            "staged_hits": 0,
+            "wal_bytes": 0,
+            "wal_recoveries": 0,
+            "wal_cleanup_errors": 0,
+            "commits": 0,
+            "rollbacks": 0,
+            "predictive_evictions": 0,
+            "predictive_fallbacks": 0,
+            "predictive_samples": 0,
+            "cache_policy_cpu_ns": 900,
+            "scan_page_accesses": 1,
+            "scan_contexts": 1,
+            "rows_scanned": 5,
+            "index_lookups": 0,
+            "join_comparisons": 0
+          }
+        },
+        "mode": "mock",
+        "explanation": "本地关键词规则演示，没有调用大模型。",
+        "data_policy": "只发送所选字段的文本和判断条件；不发送其他列、原 SQL 或表结构。"
+      }
+    },
+    {
+      "name": "inference cache clear endpoint reports actual empty cache",
+      "passed": true,
+      "elapsed_ms": 29.687,
+      "details": {
+        "response": {
+          "cleared": true,
+          "entries": 0
+        },
+        "status": {
+          "entries": 0,
+          "capacity": 512,
+          "ttl_seconds": 300,
+          "hits": 15,
+          "misses": 15,
+          "evictions": 0,
+          "operations": [
+            "filter",
+            "classify",
+            "aggregate"
+          ],
+          "data_policy": "仅发送本次所选文本字段；NULL 不发送。",
+          "scope": "显式语义算子管线；未扩展 SQL 语法，不支持语义连接。"
+        }
+      }
+    },
+    {
+      "name": "row and call budgets reject partial results without breaking SQL",
+      "passed": true,
+      "elapsed_ms": 18.474,
+      "details": {
+        "rejections": [
+          {
+            "parameters": {
+              "max_rows": 2
+            },
+            "status": 400,
+            "error": "查询返回 5 行，超过本次 2 行预算；请先用 WHERE 或 LIMIT 缩小查询。"
+          },
+          {
+            "parameters": {
+              "batch_size": 1,
+              "max_calls": 1
+            },
+            "status": 400,
+            "error": "需要 5 个批次，超过 1 次调用预算；请增大批大小或减少查询行数。"
+          }
+        ],
+        "ordinary_sql_available": true
+      }
+    },
+    {
+      "name": "research rejections preserve active transaction and staged data until rollback",
+      "passed": true,
+      "elapsed_ms": 228.565,
+      "details": {
+        "rejections": [
+          {
+            "route": "/api/research/analyze",
+            "status": 400,
+            "error": "统计采集请先提交或回滚事务；活动事务保持不变。",
+            "transaction_preserved": true,
+            "staged_pages": 2
+          },
+          {
+            "route": "/api/research/optimizer",
+            "status": 400,
+            "error": "切换研究模式请先提交或回滚事务；活动事务保持不变。",
+            "transaction_preserved": true,
+            "staged_pages": 2
+          },
+          {
+            "route": "/api/research/buffer",
+            "status": 400,
+            "error": "切换缓冲策略请先提交或回滚事务；活动事务保持不变。",
+            "transaction_preserved": true,
+            "staged_pages": 2
+          },
+          {
+            "route": "/api/research/optimize",
+            "status": 400,
+            "error": "研究优化请先提交或回滚事务；活动事务保持不变。",
+            "transaction_preserved": true,
+            "staged_pages": 2
+          },
+          {
+            "route": "/api/research/semantic",
+            "status": 400,
+            "error": "请先提交或回滚事务，再运行语义实验。",
+            "transaction_preserved": true,
+            "staged_pages": 2
+          }
+        ],
+        "rollback_restored": true
+      }
+    },
+    {
+      "name": "rollback followed by physical CHECK and integrity HTTP verification",
+      "passed": true,
+      "elapsed_ms": 49.251,
+      "details": {
+        "sql_message": "Database integrity OK",
+        "summary": {
+          "pages": 12,
+          "committed_pages": 12,
+          "staged_pages": 0,
+          "checked_pages": 12,
+          "crc_checked_pages": 12,
+          "tables": 3,
+          "indexes": 7,
+          "rows": 36,
+          "reachable_pages": 12,
+          "retained_pages": 0
+        },
+        "issues": 0,
+        "elapsed_ms": 2.026
+      }
+    },
+    {
+      "name": "same packaged EXE reopens the temporary database after owned server shutdown",
+      "passed": true,
+      "elapsed_ms": 652.231,
+      "details": {
+        "returncode": 0,
+        "stdout": "check       | status | detail                                                          \r\n------------+--------+-----------------------------------------------------------------\r\npages       | pass   | All allocated current-view page images and basic page structures\r\ncatalog     | pass   | Catalog root, ordered chunks and committed catalog agreement    \r\nschema      | pass   | Column schema, defaults and constraint metadata                 \r\nheap        | pass   | Heap slots, stable RIDs, forwarding references and row counts   \r\nconstraints | pass   | Row fields, column types, NULL and UNIQUE/PRIMARY constraints   \r\nindexes     | pass   | B+ tree invariants and bidirectional index/heap agreement       \r\nstructure   | pass   | Allocated reference bounds and exclusive page ownership         \r\nDatabase integrity OK  (2.479 ms)\r\nCOUNT(*)\r\n--------\r\n5       \r\n{\r\n  \"operator\": \"Project\",\r\n  \"detail\": \"COUNT(*)\",\r\n  \"estimated_rows\": 1,\r\n  \"children\": [\r\n    {\r\n      \"operator\": \"HashAggregate\",\r\n      \"detail\": \"global aggregation\",\r\n      \"estimated_rows\": 1,\r\n      \"children\": [\r\n        {\r\n          \"operator\": \"TableScan\",\r\n          \"detail\": \"courses\",\r\n          \"estimated_rows\": 5,\r\n          \"children\": [],\r\n          \"access_cost\": {\r\n            \"source\": \"heuristic\",\r\n            \"fallback_reason\": \"no compatible single-column index\"\r\n          },\r\n          \"actual_rows\": 5\r\n        }\r\n      ],\r\n      \"actual_rows\": 1\r\n    }\r\n  ],\r\n  \"actual_rows\": 1\r\n}\r\n1 ��  (0.153 ms)"
+      }
+    }
+  ],
+  "scope": "Final packaged EXE, actual loopback HTTP, disposable seeded DB, explicit local keyword mock only.",
+  "limitations": [
+    "No campus or external model endpoint contacted.",
+    "HTTP checks do not substitute for real browser layout QA.",
+    "Performance recommendations are observed, never forced on the tiny demo data."
+  ],
+  "exe_sha256": "953f0845572d5b016f099af2bcf742936ddd07c9885dccc4721a252a5437637b",
+  "exe_bytes": 9674016,
+  "total_checks": 22,
+  "passed_checks": 22,
+  "elapsed_seconds": 2.272
+}

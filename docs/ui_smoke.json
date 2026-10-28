@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-10-09T17:11:28.334286+08:00",
+  "passed": true,
+  "method": "Manual native IAB interaction through CUA; observations separate from unittest totals",
+  "checks": [
+    "Removed specified marketing text and hero; functional white/black workbench rendered",
+    "Desktop 1280x900 and narrow 757px layouts have no document horizontal overflow",
+    "Mobile 390x844 layout has no document horizontal overflow; database objects expand and fields remain accessible",
+    "Indexed preset executes with IndexScan, one fetched heap row and one lookup",
+    "Comparison reports matching results and actual 12-vs-1 fetched heap records",
+    "Integrity button reports 12 pages, 3 tables, 7 indexes, 36 rows and no issues",
+    "Mock AI is explicitly labeled as local rules; GPA SQL suggestion compiles as read-only",
+    "Import AI SQL changes editor only; execution result stays unchanged until Execute SQL is clicked",
+    "Explicit execution of imported GPA suggestion returns 5 real rows",
+    "Activity badge shows staged transaction pages; failed AI script validation keeps transaction intact; rollback restores GPA 3.94 and zero staged pages",
+    "Disabled AI has unavailable suggestion button while normal query returns 12 rows",
+    "No captured browser console error entries on mock or disabled workbenches"
+  ],
+  "source_sha256": {
+    "auroradb/web/app.js": "07ccc662e7583c3e5fcd19cc8eb367a6a977b74b6b46574ac0b0707ac00070fd",
+    "auroradb/web/favicon.svg": "66ef2e5457e4a49e1dcd980eb8e99e35950a999667919be57c085dfeaeba756a",
+    "auroradb/web/index.html": "6ccecf97b688e5536b7eb06cc1438e90b6783248fb0e6bc606fcae4702ab1f51",
+    "auroradb/web/styles.css": "3254fdfa331792e0701bff837255ed04a354a819a4bb67e2b898596ab5e39f7b"
+  },
+  "screenshots": [
+    "workbench.jpg",
+    "query-plan.jpg",
+    "mobile.jpg",
+    "transaction.jpg",
+    "scan-comparison.jpg",
+    "integrity.jpg",
+    "ai-assistant.jpg"
+  ]
+}

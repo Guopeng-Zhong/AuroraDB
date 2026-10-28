@@ -1,0 +1,200 @@
+AuroraDB 1.2.0 学校 AI API 接入说明
+
+一、现在可以使用的功能
+
+SQL 工作台提供生成查询、解释 SQL 和优化建议。数据库核心的 SQL 编译、计划、
+执行、持久化及事务仍由 AuroraDB 自己完成。AI 只提出建议，不自动执行查询或
+修改。无效建议的预览不回滚用户已开始的事务。
+
+AI 有三种明确模式：
+  disabled：默认禁用。SQL、全库一致性检查和扫描对比仍可正常使用。
+  mock：有限的本地规则演示，没有调用远程模型。可演示表预览、统计和简单
+        学生 GPA 阈值模板；解释/优化时保留 SQL 并给出一般性检查建议。
+  remote：调用配置的学校兼容模型 API。配置成功不等于已经实连验证。
+
+学校 API 已接入本机私有配置，默认使用 deepseek-chat，并通过首次真实请求。
+可分享的配置模板不含实际密钥。具体实连结果记录在 docs/campus_api_smoke.json；
+配置状态、一次成功调用和系统性模型效果是不同证据，不能把 mock 输出当作
+学校模型回答。
+
+学校官方文档（2026-10-23 核对）：
+  https://claw.sjtu.edu.cn/guide/sjtu-api/
+模型服务需校园网访问；校外先连接学校 VPN。地址可公开分享，Key 应仅保存在
+获授权使用者的本地配置中。
+
+二、推荐配置方法：本地 JSON
+
+1. 在项目根目录将 ai.example.json 复制为 ai.local.json。
+   PowerShell 命令：
+   Copy-Item -LiteralPath .\ai.example.json -Destination .\ai.local.json
+
+2. 使用文本编辑器填写 ai.local.json（本机已有私有配置时无需覆盖）：
+
+   {
+     "mode": "remote",
+     "base_url": "https://models.sjtu.edu.cn/api/v1",
+     "model": "deepseek-chat",
+     "api_key": "在本地填写自己获准使用的学校密钥",
+     "timeout": 180,
+     "requests_per_minute": 10
+   }
+
+   上述地址和默认模型是学校当前官方值；api_key 是说明占位符，必须在本地
+   替换。ai.example.json 的空 Key 不提供学校服务权限。
+
+   学校当前可选调用名：
+     deepseek-chat      DeepSeek V4 Flash，非思考模式，日常 SQL 助手默认值。
+     deepseek-reasoner  DeepSeek V4 Flash，思考模式，可能需要更长响应时间。
+     qwen              Qwen3.8-27B。
+     qwen3.8-27b        Qwen3.8-27B 的另一调用名。
+   改 model 后重启；使用调用名，不要填模型宣传名称。
+
+3. 双击“启动学校AI.cmd”。脚本使用：
+   dist\AuroraDB.exe --web --demo --port 0 --db data\demo --ai-config ai.local.json
+
+   源码启动也可使用：
+   python -m auroradb --web --demo --port 0 --db data\demo --ai-config ai.local.json
+
+   “启动工作台.cmd”也会在发现 ai.local.json 时自动加载该配置；没有配置时
+   保持原来的独立数据库启动方式。
+
+4. 打开控制台打印的地址，查看真实 AI 模式，然后尝试一个简单问题，如：
+   “统计 students 表的学生数量”。先审阅 SQL 建议和本地校验，再手动执行。
+
+字段说明：
+  mode      disabled / mock / remote，学校接口使用 remote。
+  base_url  HTTP(S) 地址。/v1 基址会保留前缀并追加 /chat/completions；也可填写
+            完整 /chat/completions 地址。根地址不会自动添加 /v1，需学校确认。
+            不允许 URL 内含用户名/密码、query 或 fragment，不接受重定向。
+  model     学校精确调用名，默认 deepseek-chat；见上述可选列表。
+  api_key   学校服务需要非空 Key，发送 Authorization: Bearer <key>。
+            通用兼容后端也允许配置无鉴权服务，不能据此省略学校鉴权。
+  timeout   秒，通用默认 90；学校模板及本机配置为 180，允许 0.1–300。
+            本轮真实解释请求曾超过 90 秒未返回，原记录见
+            docs/campus_api_timeout_observation.json；少量成功请求不保证长期稳定。
+            这是一次网络请求的总期限，覆盖传输槽
+            等待、DNS、连接/TLS、请求写入和响应读取，不是各阶段分别等待此时长。
+  requests_per_minute
+            当前进程中 AIService 的每分钟请求上限，学校配置为 10。AI 助手与
+            语义算子共享该实例的请求额度；本地 mock 不消耗学校额度。
+
+ai.local.json 是个人本地配置，已排除于提交包和版本跟踪。不要把实际密钥写进
+ai.example.json、源码、截图或课程报告；模板必须保留可分享的占位配置。
+提交包的文件名排除规则不区分大小写，并排除任意目录下的 pages.dat、redo.wal、
+.db/.sqlite/.sqlite3 数据库及对应 SQLite WAL/SHM 文件。
+
+AI 状态提供不含凭证的 timeout_seconds。AI 助手和可信优化前端据此加 15 秒作为
+页面等待期限，最大 315 秒；缺少或无效状态按默认 90 秒计算。语义管线仍按其
+总预算的剩余时间限制每次远程请求。前端等待期限不是取消上游任务的保证。
+每个 AIService 最多有两个传输任务。系统 DNS 调用不能被 Python 强制中断；
+超时后调用方停止等待，但该传输槽仍占用至 DNS/任务结束，防止不断积累后台任务。
+取消检查阻止迟到的 DNS 结果继续发送 SQL；已发送的请求可能仍由学校处理。
+
+三、环境变量方式
+
+未指定 --ai-config 时，读取以下环境变量：
+  AURORA_AI_MODE
+  AURORA_AI_BASE_URL
+  AURORA_AI_MODEL
+  AURORA_AI_API_KEY
+  AURORA_AI_TIMEOUT
+  AURORA_AI_REQUESTS_PER_MINUTE
+
+PowerShell 示例（使用学校真实值替换占位符）：
+  $env:AURORA_AI_MODE = 'remote'
+  $env:AURORA_AI_BASE_URL = 'https://models.sjtu.edu.cn/api/v1'
+  $env:AURORA_AI_MODEL = 'deepseek-chat'
+  $env:AURORA_AI_API_KEY = 'school-provided-key'
+  $env:AURORA_AI_TIMEOUT = '180'
+  $env:AURORA_AI_REQUESTS_PER_MINUTE = '10'
+  .\dist\AuroraDB.exe --web --demo --port 0 --db .\data\demo
+
+“启动AI演示.cmd”仅在自己的进程中设置 AURORA_AI_MODE=mock，并使用独立
+data\ai-demo 目录，不调用远程接口。“启动工作台.cmd”优先加载 ai.local.json；
+没有该文件时使用环境变量，未配置环境变量则为 disabled。以页面模式状态为准。
+
+四、当前兼容协议
+
+服务端发送非流式 POST /chat/completions 请求，JSON 包含 model、messages、
+stream=false、temperature=0.2、max_tokens=4096；messages 包括有限 SQL 方言
+约束和本次任务/上下文。学校的最终请求地址是：
+  https://models.sjtu.edu.cn/api/v1/chat/completions
+使用 Authorization: Bearer <key>。官方还提供 /api/v1/messages，项目采用已
+支持的 Chat Completions 格式，不依赖另一协议或第三方 SDK。
+
+兼容响应取 choices[0].message.content，并要求 finish_reason='stop'、
+message.role='assistant'；拒绝 tool_calls 与旧式 function_call，不展示
+reasoning_content。希望最终 content 为 JSON 对象，含：
+  explanation  中文说明字符串
+  sql          SQL 建议字符串
+  suggestions  中文字符串数组
+  warnings     中文字符串数组
+
+也支持最终答案中的单个 SQL 代码块。输出有严格类型和大小限制，拒绝空答案、
+截断、重复 JSON 字段、非有限数、孤立 Unicode 代理字符及不完整结束。
+语义结果的标签在 JSON 解码后再次检查受保护凭证，防止 Unicode 转义绕过；
+非法标签在展示与推理缓存写入前拒绝。响应读取上限 512 KiB；错误只展示
+经过处理的提示，不直接显示上游原始响应、凭证或服务地址。
+
+官方协议参考（核对日期 2026-10-23）：
+  https://claw.sjtu.edu.cn/guide/sjtu-api/
+  https://api-docs.deepseek.com/api/create-chat-completion
+请求地址、模型与鉴权以学校文档和授权通知为准；DeepSeek 文档用于兼容协议
+参考，不表示调用 DeepSeek 官方商业服务，不要求使用 OpenAI 账号或 SDK。
+
+五、学校额度与限流
+
+学校本次授权额度：10 次请求/分钟、300000 tokens/分钟、1000000000 tokens/周。
+本机请求次数限制只在当前服务进程内生效。多个 AuroraDB 进程、组员设备或其他
+应用若共用同一 Key，仍会共同占用学校额度；本机无法协调这些进程，也不能替代
+学校侧 token 计量与限额。批量语义任务的每一批推理分别计为一次请求。
+
+超过本机请求上限会立即返回提示，不自动排队或重试。学校返回 HTTP 429 时会
+进入冷却期，请等待后再试，不要重复点击或同时运行多组批量任务。用量查询地址：
+  https://aic.sjtu.edu.cn/top
+只在学校官方页面输入 Key，不在 AuroraDB 页面输入或展示凭证。
+
+官方文档当前写明默认 token 测试有效期至 2026-12-31；实际权限、到期时间与续期
+以个人授权及学校后续通知为准。模型可用列表可由获授权的客户端查询：
+  GET https://models.sjtu.edu.cn/api/v1/models
+该请求同样需要 Bearer 鉴权，不应把 Key 加到 URL 查询参数中。
+
+六、数据与执行边界
+
+远程上下文包括用户问题、用户 SQL、表名/列名/类型/约束/索引结构、行数，以及
+可用的本地编译计划。不发送查询结果行或目录中的默认值；用户问题/SQL 自身
+可能包含字面值。AIService 没有数据库句柄，不能执行 SQL。
+
+本机工作台只接受各路由约定字段，不接受客户端替换服务端 context。重复字段、
+非有限数（包括数值溢出）、孤立代理字符、超过 64 层的 JSON 和未知路由参数
+均返回 400，在 SQL 执行或模型调用之前拒绝；正常 Unicode 代理对不受影响。
+
+建议返回后由本地解析器、名称绑定和物理计划预览检查，只接受单个 SELECT
+（或其 EXPLAIN 包装）作为通过校验的查询建议。预览不会获取结果行。校验通过
+不是业务正确性、SQL 结果或优化收益保证；用户审阅、填入编辑器后手动执行。
+
+远程请求不持有数据库锁，因此其他操作可继续。返回时重新校验建议；这不保证
+模型处理期间 schema 一直没变，实际执行还会重新编译。如果期间改了表/列，
+以本地最新错误和计划为准。所有工作台标签页仍共享同一个显式事务会话。
+
+七、问题排查与交付状态
+
+  AI 未启用：检查 mode、启动脚本和当前进程配置；修改后重启服务。
+  HTTP 401/403：请核对学校鉴权格式及凭证权限，当前实现使用 Bearer。
+  HTTP 404：核对 /v1 前缀及完整 /chat/completions 路径。
+  HTTP 429：学校限额或当前进程限流。等待后重试；检查是否有其他程序共用 Key。
+  HTTP 3xx：本程序拒绝重定向，需配置最终地址。
+  超时/连接失败：核对学校网络/VPN、服务可用性和 timeout。
+                deepseek-reasoner 可能较慢；日常先用 deepseek-chat。timeout
+                最多支持 300 秒，超时失败不表示学校一定没有处理该请求。
+                DNS 若迟迟未返回，会暂时占用最多两个传输槽；等待系统解析结束
+                或恢复校园网络后重试，不要通过反复点击积累任务。
+  无效 JSON/截断/不完整结束：核对兼容响应格式，重试或由学校确认输出长度。
+  SQL 校验失败：学校模型可能生成未支持语法、错误表/列或多个语句。阅读原因，
+                 调整需求或手动修改；它不会自动执行，也不应当当作内核结果。
+
+自动测试覆盖本地规则与兼容协议、脱敏、大小/超时和限流等失败边界；这些验证
+使用临时测试服务。学校真实接口的本次实连证据单独保存于
+docs/campus_api_smoke.json，仅含脱敏结果与必要统计，不保存 Key 或原始响应。
+实连成功只能验证该时刻的接口与少量任务；模型生成 SQL 的准确率、语义任务
+准确率、延迟分布与可信优化收益，仍需标注数据集并单独完成实验。

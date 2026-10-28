@@ -1,0 +1,70 @@
+AuroraDB 小组分工与个人实际完成情况填写表
+==========================================
+
+填写说明
+1. 下表是四人小组的拟定模块分工草案；“实际完成内容”必须由对应成员确认后再提交，不能把未参与的工作写成既成事实。
+2. 只修改冒号“：”后面的内容，不要删除方括号标题行（如 [成员1]），也不要改动冒号前的字段名。
+3. 3 人小组：删除整个 [成员4] 段，并把“验证与文档”的工作并入其他成员。
+4. “代表性提交”填写本人在 GitHub 仓库中的提交号（git log --oneline 可查看）或可核对的说明。
+5. 各成员“工作量占比”之和应为 100。
+6. 填写完成后运行：python tools/build_se_docs.py
+   程序会把本表内容写入《AuroraDB_软件工程文档.pdf》第 07 章，并检查占比合计。
+
+四个系统组成部分与对应创新点
+1. 数据存储与缓冲子系统：页存储、堆表、B+Tree、WAL、LRU；创新点为扫描感知的预测缓冲策略。
+2. SQL 编译与查询执行子系统：词法/语法、绑定、扫描、连接、聚合、事务；创新点为可信查询改写与结果核验。
+3. 统计学习与性能优化子系统：统计信息、基数估计、访问成本和实验评估；创新点为域外回退的轻量学习型优化。
+4. AI 语义与交互交付子系统：语义算子、AI 接口、Web/CLI、测试、文档和打包；创新点为带批处理、去重、缓存和预算的 AI 语义算子。
+
+[成员1]
+姓名：钟国鹏
+学号：
+角色：SQL 编译与可信查询执行
+负责模块：SQL 词法/语法、语义绑定、扫描/连接/聚合/事务执行；创新点为可信查询改写、规则证据、候选结果核验和保守推荐
+负责源文件：auroradb/sql.py、auroradb/engine.py、auroradb/optimizer.py、tools/optimizer_experiment.py
+对应测试：tests/test_sql.py、tests/test_engine.py、tests/test_regressions.py、tests/test_diagnostics.py、tests/test_research_optimizer.py、docs/optimizer_research.json
+实际完成内容：拟负责 SQL 编译与可信查询执行组件；与全组共同参与总体架构、其他创新方向接口讨论、需求分析、构思讨论、代码核验、测试复现、报告与答辩材料；提交前由本人确认实际完成内容。
+代表性提交：
+工作量占比（%）：25
+本人签名：
+
+[成员2]
+姓名：曾子恒
+学号：
+角色：数据存储与预测缓冲
+负责模块：存储管理器（页格式与 CRC、HeapTable、BPlusTree、WAL 与崩溃恢复）、LRU/预测缓冲策略与一致性检查；创新点为扫描感知预测淘汰、无证据回退 LRU
+负责源文件：auroradb/storage.py、auroradb/integrity.py、tools/buffer_experiment.py
+对应测试：tests/test_storage.py、tests/test_integration_storage.py、tests/test_integrity.py、tests/test_predictive_buffer.py、docs/buffer_research.json
+实际完成内容：拟负责数据存储与预测缓冲组件的设计核验和实验复现；与全组共同参与需求分析、构思讨论、接口联调、代码核验、测试复现、报告与答辩材料；提交前由本人确认实际完成内容。
+代表性提交：
+工作量占比（%）：25
+本人签名：
+
+[成员3]
+姓名：黄俊植
+学号：
+角色：统计学习与性能优化
+负责模块：统计信息、NULL/NDV/直方图、基数估计、访问成本模型、训练/留出查询和差分评估；创新点为域外回退的轻量学习型优化
+负责源文件：auroradb/learning.py、auroradb/workload.py、auroradb/join_optimizer.py、auroradb/engine.py（查询规划集成）、tools/audit_queries.py、tools/join_optimizer_experiment.py、tests/test_research_optimizer.py、tests/test_join_optimizer.py、docs/RESEARCH_DESIGN.txt
+对应测试：tests/test_research_optimizer.py、tests/test_join_optimizer.py、tests/test_research_audit.py、tools/join_optimizer_experiment.py
+实际完成内容：实现列统计与轻量基数/读成本/连接成本模型、字面量类型归一化的有界工作负载反馈、最多6表的INNER JOIN动态规划、置信度/域外/预算回退、执行计划诊断和训练/留出/漂移实验；与全组共同参与需求分析、构思讨论、可信改写与存储缓冲接口评审、差分测试、代码核验、报告与答辩材料；提交前由本人确认实际完成内容。
+代表性提交：
+工作量占比（%）：25
+本人签名：
+
+[成员4]
+姓名：路茗淳
+学号：
+角色：AI 语义、交互与交付
+负责模块：显式语义筛选/分类/聚合算子、批处理与缓存协议；浏览器工作台、命令行 REPL、HTTP 安全校验、AI 接入展示、打包、测试计划与报告组织；创新点为受预算约束的 AI 语义执行算子
+负责源文件：auroradb/semantic.py、auroradb/ai.py、auroradb/server.py、auroradb/__main__.py、auroradb/web/、tools/semantic_experiment.py、tools/verify.py、tools/build_report.py、tools/build_se_docs.py、docs/
+对应测试：tests/test_semantic.py、tests/test_server.py、tests/test_advanced_server.py、tests/test_ai.py、tests/test_ai_deadlines.py、tests/test_ai_integration.py、tests/test_submission.py、docs/semantic_research.json、docs/test_results.json
+实际完成内容：拟负责 AI 语义与交互交付组件的核验；与全组共同参与需求分析、构思讨论、四项创新接口评审、界面验收、测试复现、报告与答辩材料；提交前由本人确认实际完成内容。
+代表性提交：
+工作量占比（%）：25
+本人签名：
+
+[小组确认]
+组长：钟国鹏
+确认日期：2026-10-24（提交前由四位成员共同确认）
+备注：四人均参与构思、讨论、需求分析、代码/结果核验、测试复现、报告撰写与答辩准备；模块负责人表示组织和核验责任，不替代成员本人对“实际完成内容”的确认。四人拟定工作量占比合计 100%。

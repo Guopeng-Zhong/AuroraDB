@@ -1,0 +1,170 @@
+{
+  "timestamp": "2026-10-23T09:01:44.790667+00:00",
+  "seed": 20261010,
+  "provider": "local deterministic keyword HTTP fixture",
+  "school_api_measured": false,
+  "school_model_accuracy": null,
+  "input_rows": 64,
+  "unique_texts": 32,
+  "fixture_delay_ms": 3,
+  "passed": true,
+  "runs": [
+    {
+      "name": "individual",
+      "batch_size": 1,
+      "rows": 22,
+      "fixture_agreement": true,
+      "stats": {
+        "model_calls": 32,
+        "batches": 32,
+        "cache_hits": 0,
+        "cache_misses": 32,
+        "unique_texts": 32,
+        "deduplicated_rows": 32,
+        "null_rows": 0,
+        "sql_elapsed_ms": 0.715,
+        "inference_elapsed_ms": 212.504,
+        "elapsed_ms": 213.438,
+        "budget_rows": 64,
+        "budget_calls": 32,
+        "budget_seconds": 30,
+        "sql_budget": {
+          "seconds": 6.0,
+          "scanned_rows": 100000,
+          "join_comparisons": 200000,
+          "intermediate_rows": 20000
+        },
+        "query": {
+          "cache_hits": 1,
+          "cache_misses": 0,
+          "disk_reads": 0,
+          "disk_writes": 0,
+          "cache_evictions": 0,
+          "staged_hits": 0,
+          "wal_bytes": 0,
+          "wal_recoveries": 0,
+          "wal_cleanup_errors": 0,
+          "commits": 0,
+          "rollbacks": 0,
+          "predictive_evictions": 0,
+          "predictive_fallbacks": 0,
+          "predictive_samples": 0,
+          "cache_policy_cpu_ns": 1300,
+          "scan_page_accesses": 1,
+          "scan_contexts": 1,
+          "rows_scanned": 64,
+          "index_lookups": 0,
+          "join_comparisons": 0
+        }
+      }
+    },
+    {
+      "name": "batched_cold",
+      "batch_size": 8,
+      "rows": 22,
+      "fixture_agreement": true,
+      "stats": {
+        "model_calls": 4,
+        "batches": 4,
+        "cache_hits": 0,
+        "cache_misses": 32,
+        "unique_texts": 32,
+        "deduplicated_rows": 32,
+        "null_rows": 0,
+        "sql_elapsed_ms": 0.724,
+        "inference_elapsed_ms": 44.676,
+        "elapsed_ms": 45.626,
+        "budget_rows": 64,
+        "budget_calls": 32,
+        "budget_seconds": 30,
+        "sql_budget": {
+          "seconds": 6.0,
+          "scanned_rows": 100000,
+          "join_comparisons": 200000,
+          "intermediate_rows": 20000
+        },
+        "query": {
+          "cache_hits": 1,
+          "cache_misses": 0,
+          "disk_reads": 0,
+          "disk_writes": 0,
+          "cache_evictions": 0,
+          "staged_hits": 0,
+          "wal_bytes": 0,
+          "wal_recoveries": 0,
+          "wal_cleanup_errors": 0,
+          "commits": 0,
+          "rollbacks": 0,
+          "predictive_evictions": 0,
+          "predictive_fallbacks": 0,
+          "predictive_samples": 0,
+          "cache_policy_cpu_ns": 2000,
+          "scan_page_accesses": 1,
+          "scan_contexts": 1,
+          "rows_scanned": 64,
+          "index_lookups": 0,
+          "join_comparisons": 0
+        }
+      }
+    },
+    {
+      "name": "batched_warm",
+      "batch_size": 8,
+      "rows": 22,
+      "fixture_agreement": true,
+      "stats": {
+        "model_calls": 0,
+        "batches": 0,
+        "cache_hits": 32,
+        "cache_misses": 0,
+        "unique_texts": 32,
+        "deduplicated_rows": 32,
+        "null_rows": 0,
+        "sql_elapsed_ms": 0.78,
+        "inference_elapsed_ms": 0.308,
+        "elapsed_ms": 1.407,
+        "budget_rows": 64,
+        "budget_calls": 32,
+        "budget_seconds": 30,
+        "sql_budget": {
+          "seconds": 6.0,
+          "scanned_rows": 100000,
+          "join_comparisons": 200000,
+          "intermediate_rows": 20000
+        },
+        "query": {
+          "cache_hits": 1,
+          "cache_misses": 0,
+          "disk_reads": 0,
+          "disk_writes": 0,
+          "cache_evictions": 0,
+          "staged_hits": 0,
+          "wal_bytes": 0,
+          "wal_recoveries": 0,
+          "wal_cleanup_errors": 0,
+          "commits": 0,
+          "rollbacks": 0,
+          "predictive_evictions": 0,
+          "predictive_fallbacks": 0,
+          "predictive_samples": 0,
+          "cache_policy_cpu_ns": 1600,
+          "scan_page_accesses": 1,
+          "scan_contexts": 1,
+          "rows_scanned": 64,
+          "index_lookups": 0,
+          "join_comparisons": 0
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "仅测批处理/精确缓存/协议，不测真实大模型语义准确率。",
+    "调用计数包含本地HTTP假服务，耗时包含人为3ms请求开销。",
+    "一次SELECT物化后推理；普通SQL语法未增加模型函数。"
+  ],
+  "source_sha256": {
+    "auroradb/semantic.py": "fa1818df39596e85d423c260c7c3184df247cb329d2864020222438b0d1e8703",
+    "auroradb/ai.py": "a635848c63e2d44e74a8e31135fce61d83a5f7e2b45d300f60f475107b1b87dc",
+    "auroradb/engine.py": "22e5607523ff22f491f3c63d17788677bfbf4c054b58e164a2c13e832171623b"
+  }
+}

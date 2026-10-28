@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-10-25T03:23:01.685972+00:00",
+  "passed": true,
+  "scope": "Independent adversarial review plus repair; no zero-defect or production-readiness claim.",
+  "fixed_findings": [
+    {
+      "area": "SQL集合语义",
+      "status": "fixed",
+      "description": "DISTINCT/GROUP BY曾把TRUE与1、FALSE与0合并；已使用带类型的行签名。"
+    },
+    {
+      "area": "SQL连接与索引",
+      "status": "fixed",
+      "description": "JOIN比较结果类型、未知COALESCE类型的IN预检以及索引IN提前集合去重已修复。"
+    },
+    {
+      "area": "WAL恢复",
+      "status": "fixed",
+      "description": "完整未知尾帧或仅有帧头时，原解析游标可能误清日志；现以有效B/P前缀末尾判定，保留日志并拒绝恢复。"
+    },
+    {
+      "area": "网络总时限",
+      "status": "fixed",
+      "description": "等待、DNS、TLS、写入、响应读取均由调用方总deadline约束；传输任务最多2个，取消后不迟到发送。"
+    },
+    {
+      "area": "前后端超时契约",
+      "status": "fixed",
+      "description": "前端曾固定105秒；现按公开timeout_seconds加15秒等待，最大315秒。"
+    },
+    {
+      "area": "模型输出保护",
+      "status": "fixed",
+      "description": "Unicode转义后的标签凭证、孤立代理字符、非assistant角色及旧式function_call均会拒绝，失败不缓存。"
+    },
+    {
+      "area": "HTTP输入",
+      "status": "fixed",
+      "description": "重复JSON字段、非有限数、非法Unicode、过深嵌套、未知字段和畸形请求地址均在执行前返回400。"
+    },
+    {
+      "area": "交付隐私",
+      "status": "fixed",
+      "description": "打包器补排除任意目录的数据库文件、journal文件及Windows大小写变体；现有包未发现运行数据库或密钥泄漏。"
+    }
+  ],
+  "verification": {
+    "automated_tests": 249,
+    "automated_failures": 0,
+    "automated_errors": 0,
+    "standard_query_comparisons": 384,
+    "edge_query_comparisons": 684,
+    "query_mismatches": 0,
+    "research_executable_checks": 22,
+    "campus_checks": 6,
+    "prior_campus_timeout_observation_retained": true,
+    "browser_checks": 6
+  },
+  "remaining_limitations": [
+    "本轮曾发生一次90秒内未取得学校API解释响应的情况；失败观察已保留，不能由重试成功推断长期稳定。学校配置现180秒。",
+    "系统DNS调用不能跨平台强制中断，已超时的任务可能暂占传输槽，直到DNS自行结束；任务数有界。",
+    "RPM仅在单个AIService/进程内协调；同Key跨进程额度、TPM及周token配额由学校服务执行。",
+    "仅deepseek-chat完成真实小样本验收；其余模型别名、复杂语义准确率和长期负载尚未系统性测试。",
+    "教学内核仍无MVCC/账户系统、子查询/CTE/窗口/外键/复合键、磁盘溢写和VACUUM；B+删除不做合并回收。",
+    "SQL研究执行预算为协作式检查，复杂规划并非硬实时中断；模型候选和语义标签不构成普遍正确性证明。"
+  ],
+  "source_sha256": {
+    "auroradb/__init__.py": "5b32f332ce65d018b6e6a3018cdb95427fff2895dee52f8b6dfd6f05a0ef913d",
+    "auroradb/__main__.py": "0f1d69012a31376c18020c66f443fc518458ceb2d460fc4354c81cce137249f8",
+    "auroradb/ai.py": "a635848c63e2d44e74a8e31135fce61d83a5f7e2b45d300f60f475107b1b87dc",
+    "auroradb/engine.py": "22e5607523ff22f491f3c63d17788677bfbf4c054b58e164a2c13e832171623b",
+    "auroradb/integrity.py": "3bc76c5fa12c8acf13549503516a0e823a7144bb377587c6e2b50d8aa0217087",
+    "auroradb/learning.py": "37c395411185b06b649e39654f3aff8ef3b43f4dc6c30d932cce8da22638060a",
+    "auroradb/optimizer.py": "58c531e668864eba83375c9a7aba35a4519a74a820ba1e75389aacbaed54a4f7",
+    "auroradb/semantic.py": "fa1818df39596e85d423c260c7c3184df247cb329d2864020222438b0d1e8703",
+    "auroradb/server.py": "e1645229be0bbe220b18e15b3aef006f7aa61f53e84aa88c8f0f968c9f9bd5c8",
+    "auroradb/sql.py": "52d6c56f01b63b9e0c8ff95c0f977bad1e8ae72cba588cb0bc364dbf05acb2c0",
+    "auroradb/storage.py": "d305475e74acebfb06518133ca00dbc446cc38e12f166480216e3976b9d08f5b",
+    "auroradb/web/app.js": "033d5e73bb710a178422e7acade86c8d7dd115751e60690ccfeec26c92ac0d11",
+    "auroradb/web/index.html": "d17f5d27ebdab089ba7a88dda1fc120c1f6e32e7520406c69964ede552b4c4fd",
+    "auroradb/web/styles.css": "12243d1dc6be48dd10f267f4ed64e7e10e5420d97e3038dfa97abca937cd8bf6",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/test_advanced_server.py": "ee5f13483a47c4f146e3b3ab3a7d49e75dc118fba9ae9656cebc801ab5baf7e5",
+    "tests/test_ai.py": "b6420caa8ae1bd45689cef829bd7bcbfb2f86034c06ac118865cc73c50e6c2ef",
+    "tests/test_ai_deadlines.py": "105c1795fd72af8d3672383e67f975512e671445a5ad207173aa6745445582a4",
+    "tests/test_ai_integration.py": "3d48baf3d58d6ebfaec81b122c3d36b7df7cfee86ddec9e774c662e11c56dc35",
+    "tests/test_chinook_dataset.py": "b4802d50f46398c1c8f43a0a37da399194aa070b975bcbfa42c7c93153211b56",
+    "tests/test_diagnostics.py": "1f43391a24088a8dd3481abd105612b160f9045a7d6aabf010ba8c8aace4a64a",
+    "tests/test_engine.py": "cbdb7e7ee25b5dba1fc272eac04bcd841ca989dc1621c2daeb70665344630b2b",
+    "tests/test_integration_storage.py": "e95bc0494a5cff9afb0e43f7bc3c737bc13fbf1e8825e80f5cedd6824f0640d6",
+    "tests/test_integrity.py": "6e6ff313cafe32d6a79dcd6bcce66637ffb4437c5b9fe92d942fd12f60c61fe9",
+    "tests/test_predictive_buffer.py": "db7f216821e550355acf6d49125971b99f0c25be33505d3463ea6ef359f02a5e",
+    "tests/test_regressions.py": "541435c3ef911e22247c20f30c499462f8521fc466fa55682fa970a09e22b994",
+    "tests/test_research_audit.py": "0693d645b883a6eb83aa3726531aa7c8e195f97d5d7130748d4f2c2ee244e228",
+    "tests/test_research_optimizer.py": "81df3ac640d198e03c1c66b0e59981ee7a841fa8563c56f964d7b6bc9d79694a",
+    "tests/test_semantic.py": "dfbda7b3909079cf43df7ad4bae846833253bbbc4618967b8cd0be1dce7d346b",
+    "tests/test_server.py": "2f01d5b92bf9ef4724946e316a03802ed4082f5b86fff78d3f60e0558196bc24",
+    "tests/test_sql.py": "74221866e96a2474248a80b593978e0617f4628b73bec8e06cac79e9b16a33b4",
+    "tests/test_storage.py": "55886814651fd97ae6f42acd3bdba7ee8aaae4b390a1b45314699d6d68fdbdfa",
+    "tests/test_submission.py": "7cf9ba02ab005016f451677bffc258ef039a679a9f5c9122329984da584b9911"
+  },
+  "exe_sha256": "953f0845572d5b016f099af2bcf742936ddd07c9885dccc4721a252a5437637b"
+}

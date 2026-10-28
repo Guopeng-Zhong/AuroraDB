@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": [
+    "EXE bundled demo assets and query execution",
+    "EXE database persistence across independent processes",
+    "EXE error exit status",
+    "EXE bundled Decimal rounding and finite mean with overflowing intermediate sum",
+    "EXE bundled physical integrity checker through SQL",
+    "EXE bundled HTML JS CSS and authenticated HTTP SQL API",
+    "EXE authenticated physical integrity HTTP API",
+    "EXE authenticated scan and index comparison with real counters",
+    "EXE local JSON AI configuration and explicitly labeled nonexecuting mock SQL suggestion",
+    "EXE reopen after server process termination"
+  ],
+  "exe_bytes": 9674016,
+  "note": "Executed from a separate working directory with a temporary database; no external Python executable or database engine launched by the EXE."
+}

@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-10-23T09:15:37.713673+00:00",
+  "passed": true,
+  "seed": 88310,
+  "comparisons": 684,
+  "mismatches": 0,
+  "failures": [],
+  "scope": "Shared supported SQL subset: index IN/NOT IN, NULL, aggregates and nested BOOLEAN JOIN predicates.",
+  "case_sha256": "b20a85d3d2870353f69c01590cdf89253f451a46463f1fa8d02c968a6e39d111",
+  "source_sha256": {
+    "auroradb/engine.py": "22e5607523ff22f491f3c63d17788677bfbf4c054b58e164a2c13e832171623b",
+    "auroradb/sql.py": "52d6c56f01b63b9e0c8ff95c0f977bad1e8ae72cba588cb0bc364dbf05acb2c0",
+    "tools/sql_edge_audit.py": "2a83208d9cec832596fb669c644b920c9a64cef57b964b801680071d0e60f72e"
+  }
+}

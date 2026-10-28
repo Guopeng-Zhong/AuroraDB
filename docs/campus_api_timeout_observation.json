@@ -1,0 +1,44 @@
+{
+  "format_version": 1,
+  "generated_at": "2026-10-23T09:01:44.410023+00:00",
+  "passed": false,
+  "provider": "SJTU campus API",
+  "model": "deepseek-chat",
+  "scope": "Packaged EXE, actual campus model, synthetic course dataset only.",
+  "requests_per_minute": 10,
+  "planned_remote_calls": 4,
+  "exe_sha256": "756f8b0c6f76b17175cf426f7c90c79dceefae1272295709a832559668b5e16a",
+  "source_sha256": {
+    "auroradb/ai.py": "a635848c63e2d44e74a8e31135fce61d83a5f7e2b45d300f60f475107b1b87dc",
+    "auroradb/__main__.py": "09822fb548d1306f93fad30ed761e105a81466bd54b9768f92ef066810eb9215",
+    "auroradb/server.py": "e1645229be0bbe220b18e15b3aef006f7aa61f53e84aa88c8f0f968c9f9bd5c8",
+    "tools/campus_api_smoke.py": "5c4e68693d026fee7f0d4cfde2a732aa8f76115ddff91ad5a38d8c4251f8cb22"
+  },
+  "limitations": [
+    "A small connectivity/function smoke check, not a model accuracy benchmark.",
+    "Other authorized models, token quota and long-run rate limits were not measured.",
+    "No user database or private records were sent."
+  ],
+  "checks": [
+    {
+      "name": "school profile loads in packaged EXE without exposing the key",
+      "passed": true,
+      "elapsed_seconds": 0.016,
+      "observed": {
+        "model": "deepseek-chat",
+        "requests_per_minute": 10
+      }
+    },
+    {
+      "name": "real SQL generation compiles and matches the known fixture",
+      "passed": true,
+      "elapsed_seconds": 23.438,
+      "observed": {
+        "sql_compiled": true,
+        "fixture_result_matches": true,
+        "rows": 4
+      }
+    }
+  ],
+  "error": "/api/ai: HTTP 502: AI 请求超时，请检查学校服务或稍后重试。"
+}

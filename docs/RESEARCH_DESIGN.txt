@@ -1,0 +1,89 @@
+AuroraDB 1.2.0 研究扩展契约与引用
+核对日期：2026-10-23
+
+一、定位
+在课程方案一的自研关系内核上集成四项研究思想，提供明确输入输出、对照路径、失败回退和可复现实验。创新定位是缩减的系统实现和实验设计，不声称发明原论文方法、完整复现、跨数据库泛化保证或普遍加速。运行时仅使用 Python 标准库。
+
+二、可信查询改写 [1][2]
+入口：Database.optimize_query(sql,candidate_sql=None)，POST /api/research/optimize。
+本地三条可信规则：同列兼容等值OR转IN（保留NULL）；确定性重复AND消除；WHERE TRUE消除。候选由同一解析器和绑定器处理；规则前置条件和AST摘要形成可重放证据。
+proven：该候选处于已覆盖的规则变换范围；仍执行结果与性能验证。
+tested：未知候选在当前提交数据上实测一致；不证明任意数据状态等价，不推荐自动替换。
+unknown：编译、结果、排序或范围不能通过检查。
+比较保留完整重复项、NULL与布尔/数值/文本类型；INTEGER/REAL值相等允许数值兼容。无ORDER按多重集合，有ORDER要求相同可映射输出的排序键，并按同值组核对多重集合。LIMIT/OFFSET拒绝；不支持的语法明确拒绝；始终只读。
+每路3次清空应用缓冲池的测量，操作系统缓存保留；记录实际扫描行、文件读页、时间、MAD。保守门槛考虑至少1ms、15%与噪声；短查询可能不推荐。总成本包含编译、验证、测量；远程AI端点另记录模型调用耗时，不将单次执行收益当作端到端收益。
+结论缓存只对相同原/候选AST、数据/事务代次、模式、模型revision、缓冲策略与采样配置复用，命中明确标记未重测并保留原测量来源。模板保存规则元信息并登记查询形状命中，当前不跳过候选构造，新字面值仍校验并执行。写入/事务状态/统计更新/策略切换使相关结论失效。
+AI候选使用既有学校兼容接口。发送SQL、结构、计划，不发送结果行；SQL字面量仍属于请求。活动事务、不支持实验语句在调用模型前拒绝。模型不能直接写数据库；候选导入仅填入编辑器。
+AI状态公开timeout_seconds，普通助手与可信优化前端按此值加15秒等待，最大315秒。一次传输的总deadline覆盖传输槽等待、DNS、连接/TLS、请求写入与响应读取；每个AIService最多同时保留两个传输任务。系统DNS不能强制中断，超时任务仍占槽至结束；取消后迟到的解析结果不能继续发送请求。已发往上游的请求不保证停止。
+HTTP输入采用严格JSON与路由参数白名单，重复字段、非有限数/数值溢出、孤立Unicode代理字符、超过64层嵌套和未知参数返回400，不执行SQL或调用模型。模型输出要求完整结束与assistant角色，拒绝工具调用。
+内核DISTINCT与GROUP BY使用带SQL类型的键，BOOLEAN不与数值0/1合并，INTEGER/REAL保留数值兼容；JOIN在物理计划选择前检查已知比较类型，动态表达式仍在执行时检查，避免算法差异掩盖类型错误。
+
+三、列统计与轻量学习 [3][4]
+入口：Database.analyze_statistics()、set_optimizer_mode('heuristic'|'adaptive')、research_status()。
+统计：提交态行数、页数、NULL、NDV、min/max、最多12等深桶及频繁值。默认heuristic保留35%索引候选阈值；单列索引RID数量仍为真实枚举，IN多探测去重。
+访问成本：TableScan/IndexScan分别训练标准库ridge模型。至少8个冷应用缓存读路径样本和3种特征向量才就绪；目标为读路径耗时，非完整查询耗时。训练域外、热缓存或样本不足回退。结果中的estimation_ms包含候选枚举及统计/模型估计开销，非纯模型推理时间。
+基数：统计估计过滤选择性，过滤反馈用单调ridge校准；等值连接使用NDV/NULL先验，并按连接类型及表列对训练ridge反馈模型。连接校准特征包括原始连接选择率及两侧输入相对基表规模；特征超出训练范围时回退到NDV估计。所有ridge模型至少8个样本、3种特征向量后才就绪，每个模型最多96个样本。
+多表计划搜索：adaptive模式、统计可用且至少3张表时，支持最多6张表的INNER JOIN连接顺序动态规划。当前仅接受ON为跨表列等值比较的AND组合；每个关系的单表WHERE条件在连接前估算并在被接受的计划中下推。动态规划按已加入关系集合保留代价/中间行数Pareto前沿，累计基表访问代价和每次连接的估计代价；访问代价使用TableScan/IndexScan规则或已训练读成本模型，连接代价使用已训练的哈希连接耗时模型或可解释规则。最多512个候选前缀、20ms搜索预算；超预算、成本信心不足、预计收益不超过max(0.05ms,基线成本15%,模型不确定度2倍)或连接形状不支持时回退原SQL顺序。搜索只构造和评分计划，不读候选查询行；实际只执行选中的一个计划。LEFT JOIN不重排。
+工作负载：每个数据库实例保留最多128种字面量类型归一化的查询形状，记录执行次数、平均耗时/页读取/扫描行/连接比较/Q-error、末次连接与访问计划；不保存SQL字面量或结果行。重复查询的上次连接顺序仅用于成本相等时的稳定破平；数据代次、统计版本或模型revision变化后不复用。写入、重新统计及缓冲策略变更时清空或失效相关结论。成功执行后收集节点实际行数和Q-error、连接耗时和总执行摘要；EXPLAIN不执行候选，也不写执行反馈。状态可查询并能在EXPLAIN计划中观察关系数、连接顺序、候选前缀数、搜索耗时、统计版本、成本来源和回退原因。
+`tools/join_optimizer_experiment.py`构造固定偏斜数据，比较启发式、只用统计、经工作负载训练的adaptive结果；训练查询与留出模板分离，统计结果行一致性、Q-error、扫描/比较数、页读取及搜索成本，随后用未见过滤值观察训练域回退，并通过提交写入触发统计/模型失效，核对自适应查询回到启发式顺序。它是单一合成负载的复现实验，不据此声称普遍延迟收益。
+以上为教学内核的有限系统实现，不声称跨数据库预训练、完整CardOOD OrderEmb或任意分布漂移保证。
+写入使统计/模型/工作负载概况失效；切换缓冲策略保留真实列统计但清理访问成本模型和优化结论。模型状态/样本/权重/误差和回退原因公开可查。
+
+四、扫描感知预测缓存 [5]
+入口：Database.set_buffer_policy('lru'|'predictive',sample_size=8)。pager底层接口仅供存储实验；业务入口使用Database方法以维护研究失效。
+默认LRU。策略只管理已提交读页，staged事务页/WAL发布不训练预测状态。堆/B+扫描提供局部下一页标签；有界衰减访问历史保护热点，从有限resident候选采样并包含LRU候选，无扫描证据回退LRU。
+计数：文件页读取、命中/未命中、淘汰、预测样本/淘汰/回退、扫描访问、策略bookkeeping耗时。bookkeeping用perf_counter计时，包含候选处理开销，不是硬件CPU周期测量。
+历史上限不超过缓存容量4倍；默认采样8，支持1–4096，实际候选不超过resident数。扫描上下文在结束/异常时释放，关闭 pager 也会清理仍被持有的扫描登记；切换策略重置预测历史，不修改持久数据。
+原论文包含并发扫描，本内核是串行缩减实验。四负载：热点点查夹扫描、重复范围、热点迁移、纯扫描。6000行，容量8/24/64页，采样1/4/8/32，3次配置随机化运行，180runs/48comparison；完整查询结果一致。最高文件读页减少约2.55%，无普遍延迟收益，最差时间约增加33.49%。
+
+五、语义关系管线 [6]
+入口：SemanticExecutor.run()、POST /api/research/semantic。
+普通SELECT物化提交态快照后释放数据库锁，模型只接收用户选择的唯一TEXT输出列与条件；NULL不发送。语义推理期间普通SQL可继续。无SQL语法扩展、无语义JOIN。
+filter -> SemanticFilter：保留判为匹配的完整原行，保留重复项。
+classify -> SemanticProject：附加 _semantic_match 与 _semantic_label，冲突别名拒绝。
+aggregate -> SemanticAggregate：模型给逐条标签后由确定性计数聚合，包含不匹配标签与NULL组。
+同次按完整文本去重，再按最多16条批处理；HTTP响应严格检查所有输入ID恰好一次、布尔match和短label。逆序ID正确重排，缺失/重复/越界/错误类型拒绝，不返回部分结果。
+结果JSON拒绝重复字段、非有限数与无效Unicode；解码后label再次检查受保护凭证，防止Unicode转义绕过。失败标签不展示、不进入缓存。
+缓存：SHA256键包含完整文本/条件/模型/模式/endpoint/API key摘要和协议版本；容量512、TTL300秒、只在内存。配置或文本变化不复用；清缓存的epoch防止进行中的请求重新写入旧缓存。无持久凭证缓存。
+默认：64输出行、每批8条、最多8批、SQL加推理总预算30秒。范围分别为行1–256、批1–16、调用1–32、时间0.1–90秒。
+SQL执行阶段协作式检查6秒、10万扫描、20万连接比较、中间2万行；finally恢复数据库计数/预算。规划/索引RID候选枚举耗时计入总时长，但没有逐步强制中断；高耗时规划可能超预算后才被执行入口拒绝。调用HTTP时使用总预算剩余时间；小输出的大连接仍受中间预算限制。以上不是操作系统进程级强制实时期限。
+本地mock仅支持‘关键词：词一|词二’，明确未调用大模型；远程为DeepSeek类Chat Completions协议。本机假服务实验证明64行/32不同文本，逐条32次、批量冷缓存4次、热缓存0次，行映射和分类/聚合一致。人为每请求3ms不能当作学校模型延迟；校园接口小样本实连另见docs/campus_api_smoke.json，真实语义准确率与推理成本仍未系统评测。
+
+五B、公开数据集与实验分层
+默认中文教学数据由 examples/demo.sql 初始化，保持 students、courses、enrollments 的小规模可读性，便于讲解 CRUD、NULL、事务和语义筛选。Chinook 作为可切换公开数据集模式导入独立数据库目录，不覆盖默认库。上游仓库与公开统计页说明其可跨数据库分发、MIT 许可、11 张表和约 1.56 万行；代表性大表为 Track 3503 行、PlaylistTrack 8715 行、InvoiceLine 2240 行。[7]
+
+导入器只保留当前内核可验证的关系表和 INTEGER/REAL/TEXT/BOOLEAN 可表达字段；视图、触发器、存储过程、BLOB/媒体列等不进入可运行子集，导入映射和每表行数写入 docs/chinook_import.json。公开数据用于展示多表连接、分组聚合、排序和索引访问，不能据此宣称完整兼容上游数据库。5000/6000 行固定种子实验仍是性能与缓冲结论的来源；Chinook 的静态规模不能替代受控实验。
+
+建议演示查询：
+SELECT ar.Name, COUNT(*) AS tracks
+FROM Artist ar JOIN Album al ON ar.ArtistId=al.ArtistId
+JOIN Track tr ON al.AlbumId=tr.AlbumId
+GROUP BY ar.Name ORDER BY tracks DESC;
+六、复现与证据
+tools/verify.py -> docs/test_results.json（完整自动化回归）。
+tools/audit_queries.py -> docs/audit_queries.json（独立384查询核对；BOOLEAN与数值不做隐式转换）。
+tools/optimizer_experiment.py -> docs/optimizer_research.json（规则、训练、留出、负收益、单调性、失效）。
+tools/buffer_experiment.py -> docs/buffer_research.json（默认完整180runs；--quick仅快速预验）。
+tools/semantic_experiment.py -> docs/semantic_research.json（仅本机假服务）。
+tools/ui_research_smoke.cjs -> 可重复纯Node UI行为检查，不是实际排版验收。
+tools/research_executable_smoke.py -> docs/research_executable_smoke.json（实际EXE研究端点）。
+tools/build_research_paper.py -> docs/AuroraDB_项目论文.pdf。
+实验JSON保留source_sha256；论文生成器拒绝失败或源码过期证据。原始数值应保留，不能为论文预期选择性删除失败或性能退化结果。
+存储恢复对合法B/P前缀后的完整未知尾帧保留WAL与数据原字节并拒绝恢复，不能以损坏提交类型为由清理证据；保守证据不单独授权重做。提交包按不区分大小写的规则排除本地配置、环境变量文件、任意目录下的pages.dat/redo.wal、.db/.sqlite/.sqlite3及对应SQLite WAL/SHM文件。
+
+七、参考文献
+[1] Narasayya V, Chaudhuri S. Leveraging Query Optimizers to Verify the Soundness of LLM-based Query Rewrites for Real-World Workloads, and More! CIDR,2026.
+https://www.cidrdb.org/cidr2026/papers/p33-narasayya.pdf
+[2] Fathollahzadeh S, Mansour E, Boehm M. ReSequel: Robust LLM-assisted Query Rewriting and Optimization using Templatization and Sampling. PVLDB19(10):2880–2893,2026. DOI:10.14778/3828612.3828639.
+https://arxiv.org/abs/2606.20853
+[3] Zeng T, Lan J, Ma J, et al. PRICE: A Pretrained Model for Cross-Database Cardinality Estimation. PVLDB18(3):637–650,VLDB2025. DOI:10.14778/3712221.3712231. 预印本首次发布2024。
+https://github.com/StCarmen/PRICE
+[4] Li R, Zhao K, Yu J X, Wang G. CardOOD: robust query-driven cardinality estimation under out-of-distribution. The VLDB Journal35,article28,2026. DOI:10.1007/s00778-026-00979-3.
+https://link.springer.com/article/10.1007/s00778-026-00979-3
+[5] Khalaji M, Vanderkooy T, Guo R B, Daudjee K. Sampling-based Predictive Database Buffer Management. PVLDB18(13):5569–5581,2025. DOI:10.14778/3773731.3773734.
+https://www.vldb.org/pvldb/vol18/p5569-khalaji.pdf
+[6] Kumarasinghe U, Liu T, Mahmood A R, Liu C, Aref W G. iPDB -- Optimizing Semantic SQL Queries. arXiv:2601.16432v4,2026. 预印本，不按已录用期刊引用。
+https://arxiv.org/abs/2601.16432
+[7] Chinook Database. Lerocha, official repository and MIT-licensed sample database. 公开表规模统计：DemoDB Chinook downloads.
+https://github.com/lerocha/chinook-database
+https://chinook.demodb.dev/downloads/

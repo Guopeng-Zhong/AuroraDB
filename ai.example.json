@@ -1,0 +1,8 @@
+{
+  "mode": "remote",
+  "base_url": "https://models.sjtu.edu.cn/api/v1",
+  "model": "deepseek-chat",
+  "api_key": "",
+  "timeout": 180,
+  "requests_per_minute": 10
+}

@@ -1,0 +1,9 @@
+# Preserve exact bytes: experiment evidence records SHA256 hashes of sources.
+# Automatic line-ending conversion would invalidate those hashes after clone.
+* -text
+*.pdf binary
+*.exe binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.command text eol=lf

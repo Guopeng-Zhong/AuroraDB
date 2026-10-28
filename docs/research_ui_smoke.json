@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "timestamp": "2026-10-25T03:23:01.678800+00:00",
+  "scope": "Actual in-app browser check of the repaired final EXE; real model functions independently checked by campus_api_smoke.json.",
+  "url": "http://127.0.0.1:54962/",
+  "school_api_contacted": false,
+  "exe_sha256": "953f0845572d5b016f099af2bcf742936ddd07c9885dccc4721a252a5437637b",
+  "source_sha256": {
+    "auroradb/web/app.js": "033d5e73bb710a178422e7acade86c8d7dd115751e60690ccfeec26c92ac0d11",
+    "auroradb/web/favicon.svg": "66ef2e5457e4a49e1dcd980eb8e99e35950a999667919be57c085dfeaeba756a",
+    "auroradb/web/index.html": "d17f5d27ebdab089ba7a88dda1fc120c1f6e32e7520406c69964ede552b4c4fd",
+    "auroradb/web/styles.css": "12243d1dc6be48dd10f267f4ed64e7e10e5420d97e3038dfa97abca937cd8bf6"
+  },
+  "checks": [
+    "Final packaged workbench loads three seeded tables and school deepseek-chat status.",
+    "SELECT 1 AS verified executes through actual browser controls and returns one row with value1.",
+    "Research panel recognizes remote semantic mode and enables optional candidate controls; learning-ready is0/2.",
+    "Expanded public status shows timeout_seconds180, requests_per_minute10 and no endpoint or credential field.",
+    "At viewport1280, document width1273 and editor/prompt font16px; no horizontal page overflow.",
+    "Browser error log is empty after ordinary query and status interactions."
+  ],
+  "screenshots": [
+    "docs/review-workbench.png"
+  ],
+  "limitations": [
+    "No model inference initiated by these browser steps; separate real-campus evidence includes a prior observed timeout.",
+    "Narrow viewport was not repeated in this backend/timeout-helper update; layout HTML and CSS are unchanged."
+  ]
+}

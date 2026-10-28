@@ -1,0 +1,14 @@
+{
+  "dataset": "Chinook",
+  "version": "1.4.5",
+  "source_url": "https://github.com/lerocha/chinook-database",
+  "source_revision": "7f67772503d71ba90f19283c38e93923addb43fa",
+  "license": "MIT",
+  "snapshot": "auroradb/examples/chinook.sql",
+  "snapshot_sha256": "190ca982d32909e32b529623dafe88695e892202f144d0b8170915d7105a6173",
+  "adapted_types": {"NVARCHAR": "TEXT", "DATETIME": "TEXT", "NUMERIC": "REAL"},
+  "omitted_features": ["foreign-key enforcement", "views", "triggers", "stored procedures", "BLOB/media payloads"],
+  "tables": {"Album":347,"Artist":275,"Customer":59,"Employee":8,"Genre":25,"Invoice":412,"InvoiceLine":2240,"MediaType":5,"Playlist":18,"PlaylistTrack":8715,"Track":3503},
+  "total_rows": 15607,
+  "verification": "Expected counts are checked by tests/test_chinook_dataset.py and tools/import_chinook.py. Run the importer to verify a fresh database directory."
+}
