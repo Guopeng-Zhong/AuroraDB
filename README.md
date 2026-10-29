@@ -126,7 +126,7 @@ python tools/research_executable_smoke.py
 | 执行引擎 | Database 的关系执行流程 | CRUD、连接、聚合、排序、NULL 语义及差分测试 |
 | 用户界面 | `auroradb/web/`、server.py、__main__.py | 浏览器工作台和命令行，真实 HTTP 集成测试 |
 | 源码与可执行程序 | auroradb、tests、tools、dist/AuroraDB.exe | 可复现构建及打包程序实际运行检查 |
-| 大作业报告（唯一的报告文件） | docs/AuroraDB_大作业报告.pdf | 以下各项均包含在这一份报告中 |
+| 大作业报告（唯一的报告文件） | docs/AuroraDB_大作业报告.pdf；LaTeX 源码 docs/report_latex/ | 以下各项均包含在这一份报告中 |
 | 软件工程规范方法 | 报告第 3、4、11、12 节 | 用例图与用例规约、23 条功能需求与 8 条非功能需求、UML 类图 / 时序图 / 状态图、55 个测试用例、需求追踪矩阵、已知缺陷、迭代与配置管理 |
 | 各模块实现方法与测试报告 | 报告第 5–9、11 节；docs 内 JSON 与内部设计说明 | 五个组件与四项创新的实现、279 项测试、实验结果与原始证据 |
 | 使用说明 | 报告第 10 节；本 README | 启动方式、命令行与 AI 配置 |

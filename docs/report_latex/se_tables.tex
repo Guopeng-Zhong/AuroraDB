@@ -1,0 +1,200 @@
+\newcommand{\UCSummaryRows}{%
+UC-01 & 数据库使用者 & 执行 SELECT，返回结果、物理计划与 I/O 统计 & FR-07–FR-10 \\
+UC-02 & 数据库使用者 & CREATE / DROP TABLE，CREATE [UNIQUE] / DROP INDEX & FR-04, FR-11 \\
+UC-03 & 数据库使用者 & INSERT / UPDATE / DELETE 并检查约束；包含 UC-04 & FR-12 \\
+UC-04 & 数据库使用者 & 显式事务或单语句自动提交 & FR-13, FR-14 \\
+UC-05 & 数据库使用者 & EXPLAIN / EXPLAIN ANALYZE；扩展 UC-01 & FR-15 \\
+UC-06 & 数据库使用者 & SHOW TABLES、DESCRIBE、工作台侧栏 & FR-04 \\
+UC-07 & 数据库使用者 & CHECK DATABASE 校验页、目录、堆、约束与索引 & FR-18 \\
+UC-08 & 数据库使用者 & 同一 SELECT 强制全表扫描与自动路径对比 & FR-19 \\
+UC-09 & 使用者、学校 AI 服务 & 生成 / 解释 / 优化建议，本地编译校验后由用户执行 & FR-20 \\
+UC-10 & 使用者、学校 AI 服务 & 统计采集、可信改写、预测缓冲、语义算子、自适应连接重排、PPT 现场对比用例 & FR-21–FR-23 \\
+UC-11 & 数据库使用者 & 打开目录、加锁、WAL 恢复、读取系统目录 & FR-01, FR-14 \\
+}
+\newcommand{\UCSpecRows}{%
+\midrule
+\multicolumn{2}{l}{\textbf{UC-01 执行 SQL 查询}} \\
+参与者 & 数据库使用者 \\
+前置条件 & 数据库已打开；目标表已存在 \\
+主事件流 & 1. 用户在编辑器输入 SELECT 并按 Ctrl+Enter（或在 REPL 中以分号结束）；2. 界面把 SQL 发送给 Database.execute()；3. 系统完成词法、语法分析和名称绑定；4. 规划器选择 IndexScan 或 TableScan，并选择哈希连接或嵌套循环连接；5. 执行引擎完成过滤、连接、分组、排序、投影、LIMIT；6. 界面显示结果表、物理计划树、实际扫描行数与页读写计数 \\
+备选 / 异常流 & 3a. 语法错误：返回含行号、列号的错误信息，不执行；3b. 列名不存在或有歧义、类型不兼容：返回 DatabaseError；3c. 当前处于显式事务：读到本事务尚未提交的修改 \\
+后置条件 & 数据不变；统计计数更新 \\
+\midrule
+\multicolumn{2}{l}{\textbf{UC-04 控制事务}} \\
+参与者 & 数据库使用者 \\
+前置条件 & 数据库已打开 \\
+主事件流 & 1. 用户执行 BEGIN；2. 后续读写在暂存页中进行，查询可读到本事务修改；3. 用户执行 COMMIT，系统按 WAL → 数据文件顺序持久化 \\
+备选 / 异常流 & 3a. 用户执行 ROLLBACK：丢弃暂存页并恢复目录快照；2a. 事务中任一语句出错：系统回滚整个事务并回到自动提交模式（设计取舍，见 5.6）；2b. 关闭连接时仍有活动事务：自动回滚 \\
+后置条件 & 已提交事务满足原子性与持久性；未提交修改不进入 pages.dat \\
+\midrule
+\multicolumn{2}{l}{\textbf{UC-11 启动数据库与崩溃恢复}} \\
+参与者 & 数据库使用者 \\
+前置条件 & 指定的数据库目录可读写 \\
+主事件流 & 1. 用户双击启动或执行 python -m auroradb --db 目录；2. 系统对 writer.lock 加独占锁；3. 读取并校验 redo.wal：完整的已提交事务被重放，残缺日志被丢弃；4. 读取页 0 与目录分片，恢复系统目录；5. 进入工作台或 REPL \\
+备选 / 异常流 & 2a. 目录已被其他连接打开：提示先关闭另一连接；3a. 日志存在提交证据但已损坏：拒绝启动并保留文件供诊断；4a. 页 CRC 不匹配：报告数据损坏，不自动覆盖 \\
+后置条件 & 数据库处于最后一次成功提交后的一致状态 \\
+}
+\newcommand{\FRRows}{%
+FR-01 & 页式磁盘存储：数据保存在 4096 字节定长页，页头含魔数、页号、长度与 CRC32 & (1) 存储管理器 & 必须 & \nolinkurl{storage.DiskPager} \\
+FR-02 & 关系表存储：按表模式保存元组，分槽堆页，RID 跨重启稳定 & (1) 存储管理器 & 必须 & \nolinkurl{storage.HeapTable} \\
+FR-03 & 高效访问：单列 B+ 树索引，支持等值、范围、IN、重复键与唯一约束 & (1) 存储管理器 & 必须 & \nolinkurl{storage.BPlusTree} \\
+FR-04 & 系统目录：表、列、约束、索引元数据跨页持久化；SHOW TABLES / DESCRIBE & (1)(3) & 必须 & \nolinkurl{engine.Database} \\
+FR-05 & 缓冲管理：有界 LRU 页缓存，统计命中、未命中、淘汰与读写页数 & (2) 缓冲管理器 & 必须 & \nolinkurl{DiskPager._cache} \\
+FR-06 & 事务暂存：未提交修改只存在于内存暂存页，不写入数据文件（NO-STEAL） & (2) 缓冲管理器 & 必须 & \nolinkurl{DiskPager._staged} \\
+FR-07 & SQL 编译：词法与递归下降语法分析，错误定位到行、列 & (3) 查询处理器 & 必须 & \nolinkurl{sql.tokenize / _Parser} \\
+FR-08 & 语义分析：名称绑定、歧义检查、类型检查、GROUP BY 合法性检查 & (3) 查询处理器 & 必须 & \nolinkurl{Database._bind} \\
+FR-09 & 查询计划与优化：索引选择、谓词下推、哈希连接 / 嵌套循环选择 & (3) 查询处理器 & 必须 & \nolinkurl{Database._scan_choice} \\
+FR-10 & 执行查询计划：扫描、过滤、连接、聚合、去重、排序、投影、LIMIT/OFFSET & (4) 执行引擎 & 必须 & \nolinkurl{Database._select} \\
+FR-11 & 数据定义：CREATE / DROP TABLE，CREATE [UNIQUE] / DROP INDEX & (4) 执行引擎 & 必须 & \nolinkurl{Database._execute} \\
+FR-12 & 数据操纵与约束：INSERT / UPDATE / DELETE；PK、UNIQUE、NOT NULL、DEFAULT、类型 & (4) 执行引擎 & 必须 & \nolinkurl{Database._write} \\
+FR-13 & 事务控制：BEGIN / COMMIT / ROLLBACK，单条写语句自动提交 & (4) 执行引擎 & 应该 & \nolinkurl{Database._begin/_commit} \\
+FR-14 & 持久性与恢复：页镜像 Redo WAL，崩溃后恢复到最后一次提交 & (1)(2) & 应该 & \nolinkurl{DiskPager.commit/_recover} \\
+FR-15 & 计划展示：EXPLAIN 与 EXPLAIN ANALYZE，显示估计行数与实际行数 & (3)(5) & 应该 & \nolinkurl{Database._execute} \\
+FR-16 & 图形用户界面：浏览器 SQL 工作台，显示结果、计划与 I/O 统计 & (5) 用户界面 & 必须 & \nolinkurl{server.py, web/} \\
+FR-17 & 命令行界面：REPL、--execute、--file，错误返回非零退出码 & (5) 用户界面 & 必须 & \nolinkurl{__main__.py} \\
+FR-18 & 一致性检查：CHECK DATABASE 校验页 CRC、目录、堆、约束和索引 & 扩展 & 可选 & \nolinkurl{integrity.py} \\
+FR-19 & 扫描对比：同一查询的全表扫描与自动路径实测对比 & 扩展 & 可选 & \nolinkurl{Database.compare_query} \\
+FR-20 & AI 助手：生成、解释、优化 SQL；只做本地编译校验，不自动执行 & 扩展 & 可选 & \nolinkurl{ai.py} \\
+FR-21 & 研究实验：统计与代价学习、可信改写、预测缓冲、语义算子 & 扩展 & 可选 & \nolinkurl{optimizer / learning / semantic} \\
+FR-22 & 自适应连接重排：adaptive 模式下对 3–6 张表的内连接用有界动态规划选择连接顺序；置信度、搜索预算或预期收益不足时回退 SQL 书写顺序 & 扩展 & 可选 & \nolinkurl{join_optimizer / workload} \\
+FR-23 & PPT 现场对比用例：在独立临时库中对比 SQL 顺序与自适应规划，核对结果并展示耗时与连接比较次数 & 扩展 & 可选 & \nolinkurl{optimizer_demo.py} \\
+}
+\newcommand{\NFRRows}{%
+NFR-01 & 可靠性 & 已提交事务原子、持久；页与日志损坏可检测，不静默返回错误数据 & 真实子进程崩溃测试、故障注入、CRC 篡改测试 \\
+NFR-02 & 正确性 & 查询结果与成熟数据库一致 & 与 SQLite 的 180 次差分测试 + 384 次独立查询审计 \\
+NFR-03 & 性能 & 有选择性的索引查询显著减少扫描记录与页读取 & tools/benchmark.py（5000 行基准） \\
+NFR-04 & 安全 & 仅监听 127.0.0.1；校验 Host、Origin 与会话令牌；SQL 不作为 Python 执行；API Key 不进入浏览器与提交包 & HTTP 安全测试、提交包排除测试 \\
+NFR-05 & 易用性 & 双击即可启动；中文界面；错误信息带行列号 & 可执行程序冒烟测试 \\
+NFR-06 & 可移植性 & 运行时只依赖 Python 标准库；提供 Windows 单文件 exe & 在独立目录运行 exe \\
+NFR-07 & 可维护性 & 分层模块、单向依赖、统一异常类型、源码注释与自动化回归测试 & tools/verify.py \\
+NFR-08 & 容量约束 & 单条记录 ≤ 4076 字节页载荷；索引键 ≤ 1024 字节；单连接串行执行 & 边界测试 \\
+}
+\newcommand{\RouteRows}{%
+GET & \nolinkurl{/} & — & 工作台页面与静态资源 \\
+GET & \nolinkurl{/api/session} & — & 会话令牌（后续 POST 必须携带 X-Aurora-Token） \\
+GET & \nolinkurl{/api/schema} & — & \{tables: [表结构]\} \\
+GET & \nolinkurl{/api/stats} & — & 缓冲池与 I/O 统计 \\
+POST & \nolinkurl{/api/query} & \{sql\} & \{results: [Result]\}；SQL 错误返回 400 \{error\} \\
+POST & \nolinkurl{/api/integrity} & \{\} & 一致性检查报告 \\
+POST & \nolinkurl{/api/compare} & \{sql\} & 全表扫描与自动路径的计划、统计与结果一致性 \\
+POST & \nolinkurl{/api/ai} & \{action, prompt, sql\} & AI 建议及本地编译校验结果（不执行） \\
+POST & \nolinkurl{/api/research/join-demo} & \{\}（固定用例，不接受 SQL） & 两种连接策略的结果、耗时中位数、连接比较次数与计划；同一时间只允许运行一次 \\
+GET / POST & \nolinkurl{/api/ai/status}、\nolinkurl{/api/research/*} & 见 RESEARCH\_DESIGN.txt & AI 状态与研究实验 \\
+}
+\newcommand{\TestLevelRows}{%
+单元测试 & 词法 / 语法分析、页管理器、LRU、堆表、B+ 树 & test\_sql、test\_storage \\
+集成测试 & SQL 层与存储层协同：目录、索引维护、约束、事务回滚 & test\_engine、test\_integration\_storage \\
+系统 / 端到端测试 & 真实 HTTP 服务、命令行子进程、可执行程序 & test\_server、executable\_smoke \\
+差分测试 & 相同数据和查询在 SQLite 上执行，逐行比对 & test\_engine（180 次）、audit\_queries（384 次） \\
+故障注入与崩溃测试 & 在提交各持久化边界注入异常或终止进程，检查恢复结果 & test\_storage、test\_integration\_storage \\
+回归测试 & 已修复问题的固定用例：类型、ROUND、AVG 溢出、ORDER BY 别名等 & test\_regressions \\
+安全测试 & Token / Origin / Host、畸形 JSON、密钥不外泄、提交包排除 & test\_server、test\_ai*、test\_submission \\
+性能测试 & 索引与全表扫描的扫描行数、页读取与耗时 & tools/benchmark.py \\
+}
+\newcommand{\TCRows}{%
+TC-01 & 缓冲管理器\\\textbf{事务暂存与回滚隔离} & 输入：begin → write\_page → 读取 → rollback → 再读取\\预期：提交前读到暂存版本；回滚后恢复原值，数据文件未被修改 & \nolinkurl{test_storage} & FR-06, FR-13 \\
+TC-02 & 缓冲管理器\\\textbf{LRU 容量与淘汰} & 输入：小容量缓存，依次读取超过容量的页，再读最早的页\\预期：缓存页数不超过容量；淘汰最久未用页；命中、未命中、淘汰计数正确 & \nolinkurl{test_storage} & FR-05 \\
+TC-03 & 存储管理器\\\textbf{单写者锁} & 输入：目录已被一个连接打开，另一连接再次打开同一目录\\预期：第二个连接被拒绝并提示已被占用 & \nolinkurl{test_storage} & FR-01 \\
+TC-04 & 存储管理器\\\textbf{页 CRC 校验} & 输入：篡改已提交页的页体、页头和填充字节后读取\\预期：抛出 StorageError，不返回损坏数据 & \nolinkurl{test_storage} & FR-01, NFR-01 \\
+TC-05 & 恢复\\\textbf{提交失败后毒化与恢复} & 输入：在 WAL fsync 之后注入故障，关闭并重新打开\\预期：连接进入 poisoned；重开后按 WAL 恢复已提交事务 & \nolinkurl{test_storage} & FR-14 \\
+TC-06 & 恢复\\\textbf{真实进程崩溃边界} & 输入：子进程分别在写 WAL 中、WAL fsync 后、写数据页后、数据 fsync 后被终止\\预期：WAL fsync 前崩溃：事务不存在；之后崩溃：新页与修改全部存在 & \nolinkurl{test_storage} & FR-14, NFR-01 \\
+TC-07 & 恢复\\\textbf{撕裂写修复} & 输入：完整 WAL 已落盘，数据文件尾部出现半页写入\\预期：重新打开后重放页镜像，页数与追加页内容正确 & \nolinkurl{test_storage} & FR-14 \\
+TC-08 & 恢复\\\textbf{损坏的已提交日志} & 输入：WAL 含完整提交标记但有记录损坏\\预期：拒绝恢复，保留 WAL 与数据文件原字节 & \nolinkurl{test_storage} & FR-14, NFR-01 \\
+TC-09 & 存储管理器\\\textbf{堆表增长、溢出转发、删除与重启} & 输入：插入多页记录 → 放大更新 → 删除 → 重启\\预期：RID 保持稳定；转发记录可读；重启后数据一致 & \nolinkurl{test_storage} & FR-02 \\
+TC-10 & 存储管理器\\\textbf{删除槽位复用} & 输入：表中有已删除槽位，继续插入\\预期：优先复用空槽；追加插入的读页数线性增长 & \nolinkurl{test_storage} & FR-02 \\
+TC-11 & 存储管理器\\\textbf{B+ 树随机重复键、范围、删除、重启} & 输入：随机插入重复键 → 范围查询 → 删除 → 重启\\预期：结果与参照集合一致；validate() 检查通过 & \nolinkurl{test_storage} & FR-03 \\
+TC-12 & 存储管理器\\\textbf{B+ 树多层分裂} & 输入：插入大量变长文本键\\预期：树高大于 1；键有序；叶链完整 & \nolinkurl{test_storage} & FR-03 \\
+TC-13 & 存储管理器\\\textbf{相同键跨多个叶节点} & 输入：插入大量相同键后 search(key)\\预期：返回全部 RID & \nolinkurl{test_storage} & FR-03 \\
+TC-14 & 存储管理器\\\textbf{唯一索引、NULL 与超长键} & 输入：唯一索引上插入重复键、多个 NULL、超过 1024 字节的键\\预期：重复键被拒绝；多个 NULL 允许；超长键被拒绝 & \nolinkurl{test_storage} & FR-03, FR-12 \\
+TC-15 & 查询处理器\\\textbf{注释、引号与位置} & 输入：含行注释、嵌套块注释、转义引号和多种引号标识符的 SQL\\预期：记号类型、值与行列号正确 & \nolinkurl{test_sql} & FR-07 \\
+TC-16 & 查询处理器\\\textbf{词法错误定位} & 输入：未闭合字符串、非法字符\\预期：SQLError 给出准确行号与列号 & \nolinkurl{test_sql} & FR-07 \\
+TC-17 & 查询处理器\\\textbf{运算符优先级与结合性} & 输入：1 + 2 * 3 - 4 等算术表达式\\预期：AST 结构符合优先级与左结合 & \nolinkurl{test_sql} & FR-07 \\
+TC-18 & 查询处理器\\\textbf{SELECT 完整子句} & 输入：带 JOIN、GROUP BY、HAVING、ORDER BY、LIMIT 的查询\\预期：各子句的 AST 正确 & \nolinkurl{test_sql} & FR-07 \\
+TC-19 & 查询处理器\\\textbf{不支持的语法显式报错} & 输入：子查询、RIGHT JOIN、ALTER TABLE 等\\预期：返回错误，不静默忽略 & \nolinkurl{test_sql} & FR-07 \\
+TC-20 & 查询处理器\\\textbf{嵌套过深防护} & 输入：嵌套深度超过 128 层的表达式\\预期：返回 SQLError，不发生栈溢出 & \nolinkurl{test_sql} & FR-07, NFR-04 \\
+TC-21 & 执行引擎\\\textbf{增删改查与持久化} & 输入：建表插入 → UPDATE / DELETE → 关闭重开 → SELECT\\预期：结果正确，重启后保持不变 & \nolinkurl{test_engine} & FR-10, FR-11, FR-12 \\
+TC-22 & 执行引擎\\\textbf{默认值、类型与约束} & 输入：省略列插入；插入重复主键、NULL 到 NOT NULL 列、错误类型\\预期：默认值生效；违规语句报错且行数不变 & \nolinkurl{test_engine} & FR-12 \\
+TC-23 & 执行引擎\\\textbf{多行 INSERT 原子性} & 输入：第二行违反主键约束的多行 INSERT\\预期：整条语句不写入任何行 & \nolinkurl{test_engine} & FR-12, FR-13 \\
+TC-24 & 执行引擎\\\textbf{显式事务与失败写入} & 输入：BEGIN → UPDATE → ROLLBACK；BEGIN → DELETE → COMMIT；事务中插入重复主键\\预期：回滚恢复原值；提交生效；出错后整个事务回滚 & \nolinkurl{test_engine} & FR-13 \\
+TC-25 & 执行引擎\\\textbf{关闭连接自动回滚} & 输入：BEGIN; DELETE FROM people; 后直接关闭并重开\\预期：删除未生效 & \nolinkurl{test_engine} & FR-13 \\
+TC-26 & 执行引擎\\\textbf{NULL 三值逻辑} & 输入：score = NULL、IS NULL、NOT (score > 85)、NOT IN (1, NULL)\\预期：结果符合 SQL 三值逻辑 & \nolinkurl{test_engine} & FR-10 \\
+TC-27 & 执行引擎\\\textbf{连接与歧义列} & 输入：LEFT JOIN、INNER JOIN + WHERE、自连接中引用未限定列\\预期：连接结果正确；歧义列报错 & \nolinkurl{test_engine} & FR-10 \\
+TC-28 & 执行引擎\\\textbf{聚合、去重、排序、分页} & 输入：GROUP BY + HAVING、DISTINCT + OFFSET、ORDER BY 列序号、空表聚合\\预期：结果正确；非法分组报错；空表聚合返回 0 / NULL & \nolinkurl{test_engine} & FR-10 \\
+TC-29 & 查询处理器\\\textbf{索引选择与索引维护} & 输入：250 行表，EXPLAIN ANALYZE 主键等值查询；更新、删除后再查；重启\\预期：计划为 IndexScan，rows\_scanned = 1；索引随修改正确维护 & \nolinkurl{test_engine} & FR-09, FR-03 \\
+TC-30 & 查询处理器\\\textbf{EXPLAIN 不执行} & 输入：EXPLAIN SELECT …\\预期：只返回计划，rows\_scanned = 0，数据不变 & \nolinkurl{test_engine} & FR-15 \\
+TC-31 & 执行引擎\\\textbf{与 SQLite 差分测试} & 输入：固定种子生成 180 轮随机查询与修改，同时在 SQLite 上执行\\预期：每轮结果与 SQLite 完全一致 & \nolinkurl{test_engine} & FR-10, NFR-02 \\
+TC-32 & 存储管理器\\\textbf{系统目录跨页扩展} & 输入：创建 75 张表 → 回滚 → 重启\\预期：目录跨多页保存且与提交状态一致 & \nolinkurl{test_integration_storage} & FR-04 \\
+TC-33 & 恢复\\\textbf{进程崩溃后整体原子恢复} & 输入：写入过程中终止进程，重启\\预期：目录、堆表与索引同时恢复到一致状态 & \nolinkurl{test_integration_storage} & FR-14, NFR-01 \\
+TC-34 & 一致性检查\\\textbf{检测页 CRC 损坏} & 输入：篡改已在缓存中的页后执行检查\\预期：报告 CRC 错误 & \nolinkurl{test_integrity} & FR-18 \\
+TC-35 & 一致性检查\\\textbf{检测缺失的索引项} & 输入：删除一个索引项（页 CRC 仍有效）后检查\\预期：报告索引与堆表不一致 & \nolinkurl{test_integrity} & FR-18 \\
+TC-36 & 诊断\\\textbf{扫描对比} & 输入：对同一 SELECT 执行 compare\_query\\预期：两条路径结果一致，文件与目录不变 & \nolinkurl{test_diagnostics} & FR-19 \\
+TC-37 & 用户界面\\\textbf{页面、表结构、统计与会话} & 输入：启动工作台，请求 /、/api/schema、/api/stats、/api/session\\预期：返回 200 与正确内容 & \nolinkurl{test_server} & FR-16 \\
+TC-38 & 用户界面\\\textbf{查询与 SQL 错误} & 输入：POST /api/query 分别提交正确与错误的 SQL\\预期：正确返回结果；错误返回 400 与错误信息 & \nolinkurl{test_server} & FR-16 \\
+TC-39 & 安全\\\textbf{令牌、来源与主机校验} & 输入：缺少令牌、跨来源、错误 Host 的请求\\预期：返回 403，不执行 SQL & \nolinkurl{test_server} & NFR-04 \\
+TC-40 & 安全\\\textbf{畸形 JSON 不执行} & 输入：重复字段、NaN、孤立代理字符\\预期：返回 400，不执行 SQL & \nolinkurl{test_server} & NFR-04 \\
+TC-41 & 用户界面\\\textbf{示例数据幂等与退出码} & 输入：两次执行 --demo；执行引用不存在表的 SQL\\预期：示例只创建一次（12 名学生）；错误时退出码为 1 & \nolinkurl{test_server} & FR-17 \\
+TC-42 & 用户界面\\\textbf{REPL 语句结束判断} & 输入：字符串或注释中包含分号的跨行输入\\预期：只在真正的语句结尾执行 & \nolinkurl{test_server} & FR-17 \\
+TC-43 & AI 助手\\\textbf{未配置时默认关闭} & 输入：无配置或配置错误时启动\\预期：AI 为 disabled，数据库功能不受影响 & \nolinkurl{test_ai} & FR-20 \\
+TC-44 & AI 助手\\\textbf{建议只编译不执行} & 输入：远程模型返回生成的 SQL\\预期：本地编译校验，不执行、不修改数据 & \nolinkurl{test_ai_integration} & FR-20, NFR-04 \\
+TC-45 & 交付\\\textbf{提交包排除私有配置} & 输入：项目中存在 *.local.json 与 .env 文件时打包\\预期：这些文件不进入压缩包 & \nolinkurl{test_submission} & NFR-04 \\
+TC-46 & 连接优化\\\textbf{动态规划选择连接顺序} & 输入：large / middle / small 三表连接图，给定基数与代价估计函数\\预期：选出 middle → small → large；只调用估计函数，不执行查询 & \nolinkurl{test_join_optimizer} & FR-22 \\
+TC-47 & 连接优化\\\textbf{适用范围限制} & 输入：含 LEFT JOIN 的三表连接；7 张表的内连接\\预期：判定为不适用，并分别说明不支持的连接类型与超出表数上限 & \nolinkurl{test_join_optimizer} & FR-22 \\
+TC-48 & 连接优化\\\textbf{保守回退} & 输入：基表置信度低；搜索预算为 0；候选上限为 1；预期收益小于不确定性边际\\预期：均不采纳新顺序，回退 SQL 书写顺序并给出原因 & \nolinkurl{test_join_optimizer} & FR-22 \\
+TC-49 & 连接优化\\\textbf{工作负载指纹} & 输入：仅字面量值不同的两条查询；容量为 2 时记录 3 个模板\\预期：指纹相同（字面量类型不同则不同）；模板数不超过容量 & \nolinkurl{test_join_optimizer} & FR-22 \\
+TC-50 & 连接优化\\\textbf{三表集成执行与失效} & 输入：2000 / 500 / 1 行三表，采集统计后在 adaptive 模式执行三表连接，再插入一行\\预期：预览不读取数据；执行顺序为 m → s → l，结果与 heuristic 模式一致；插入后统计与模型失效并回退 & \nolinkurl{test_join_optimizer} & FR-22, NFR-02 \\
+TC-51 & 研究实验\\\textbf{PPT 用例隔离运行} & 输入：用户库中已有同名 people 表且有未提交事务时调用 /api/research/join-demo\\预期：两种策略均返回 100 行，连接比较 20000 次对 200 次；临时库被清理；用户数据、事务、统计与计数器不变 & \nolinkurl{test_optimizer_demo} & FR-23 \\
+TC-52 & 安全\\\textbf{PPT 用例固定接口} & 输入：缺少令牌；请求体携带 SQL；上一次运行尚未结束时再次请求\\预期：分别返回 403、400、429，不执行任何传入的 SQL & \nolinkurl{test_optimizer_demo} & FR-23, NFR-04 \\
+TC-53 & 用户界面\\\textbf{页面展示的 SQL 与实际执行一致} & 输入：读取工作台页面中展示的用例 SQL\\预期：与后端实际执行的 SQL 完全相同 & \nolinkurl{test_optimizer_demo} & FR-23 \\
+TC-54 & 系统测试\\\textbf{可执行程序独立运行} & 输入：在没有 Python 的独立目录运行 dist/AuroraDB.exe（--demo、--execute、--web）\\预期：示例库创建成功，查询正确，进程正常退出（已通过） & \nolinkurl{executable_smoke.json} & FR-16, FR-17, NFR-06 \\
+TC-55 & 性能测试\\\textbf{索引减少扫描} & 输入：5000 行表，冷缓存，SELECT id,reading FROM measurements WHERE code=3210;\\预期：IndexScan 扫描记录数显著少于 TableScan（实测 5000 行 → 1 行） & \nolinkurl{benchmark.json} & FR-03, FR-09, NFR-03 \\
+}
+\newcommand{\TraceRows}{%
+FR-01 & 页式磁盘存储 & TC-03、TC-04 \\
+FR-02 & 关系表存储 & TC-09、TC-10 \\
+FR-03 & 高效访问 & TC-11、TC-12、TC-13、TC-14、TC-29、TC-55 \\
+FR-04 & 系统目录 & TC-32 \\
+FR-05 & 缓冲管理 & TC-02 \\
+FR-06 & 事务暂存 & TC-01 \\
+FR-07 & SQL 编译 & TC-15、TC-16、TC-17、TC-18、TC-19、TC-20 \\
+FR-08 & 语义分析 & TC-27（歧义列）、TC-28（非法分组） \\
+FR-09 & 查询计划与优化 & TC-29、TC-55 \\
+FR-10 & 执行查询计划 & TC-21、TC-26、TC-27、TC-28、TC-31 \\
+FR-11 & 数据定义 & TC-21 \\
+FR-12 & 数据操纵与约束 & TC-14、TC-21、TC-22、TC-23 \\
+FR-13 & 事务控制 & TC-01、TC-23、TC-24、TC-25 \\
+FR-14 & 持久性与恢复 & TC-05、TC-06、TC-07、TC-08、TC-33 \\
+FR-15 & 计划展示 & TC-30 \\
+FR-16 & 图形用户界面 & TC-37、TC-38、TC-54 \\
+FR-17 & 命令行界面 & TC-41、TC-42、TC-54 \\
+FR-18 & 一致性检查 & TC-34、TC-35 \\
+FR-19 & 扫描对比 & TC-36 \\
+FR-20 & AI 助手 & TC-43、TC-44 \\
+FR-21 & 研究实验 & test\_research\_optimizer、test\_semantic、test\_predictive\_buffer、以及第 11 节各项实验 \\
+FR-22 & 自适应连接重排 & TC-46、TC-47、TC-48、TC-49、TC-50 \\
+FR-23 & PPT 现场对比用例 & TC-51、TC-52、TC-53 \\
+NFR-01 & 可靠性 & TC-04、TC-06、TC-08、TC-33 \\
+NFR-02 & 正确性 & TC-31、TC-50 \\
+NFR-03 & 性能 & TC-55 \\
+NFR-04 & 安全 & TC-20、TC-39、TC-40、TC-44、TC-45、TC-52 \\
+NFR-05 & 易用性 & TC-16、TC-41、TC-54 \\
+NFR-06 & 可移植性 & TC-54 \\
+NFR-07 & 可维护性 & tools/verify.py 全量 279 项回归 \\
+NFR-08 & 容量约束 & TC-14（键 ≤ 1024 字节）、TC-32（目录跨页） \\
+}
+\newcommand{\DefectRows}{%
+DEF-01 & 中 & UPDATE / DELETE 的 WHERE 不使用索引，即使按主键定位也会全表扫描 & 2 万行表：主键点查 2.5 ms，按主键 UPDATE 220 ms & 复用 \_scan\_choice 选出目标 RID \\
+DEF-02 & 中 & CREATE INDEX 逐行插入 B+ 树，每次插入都要重新序列化整页 & 2 万行表建索引约 28 s & 先按 (key, RID) 排序，再自底向上批量构建 \\
+DEF-03 & 中 & 固定 35\% 阈值未考虑回表代价，中等选择率下索引路径可能比全表扫描慢 & 选择率 10\%：TableScan 194 ms，IndexScan 480 ms & 引入页数代价估计，或把 RID 按页排序后回表 \\
+DEF-04 & 低 & 默认 heuristic 模式下，被连接表总是全表扫描，只涉及该表的 WHERE 条件不会提前下推；adaptive 模式（含两表连接与顺序搜索回退路径）已提前过滤右输入并比较索引与表扫描 & 两表 JOIN … WHERE s.id = 5 在 heuristic 模式下仍扫描 2 万行 & 把输入过滤推广到默认模式 \\
+DEF-05 & 低 & 删除与 DROP 后的页不回收，B+ 树空叶不合并 & 文件只增不减 & 增加空闲页链表或 VACUUM \\
+DEF-06 & 低 & SELECT DISTINCT 的 ORDER BY 可引用非输出列，标准 SQL 应拒绝 & — & 绑定阶段增加检查 \\
+DEF-07 & 设计取舍 & 显式事务中任一语句出错即回滚整个事务并退出事务模式（PostgreSQL 会保留已中止状态，等待用户 ROLLBACK） & 由 TC-24 固定该行为 & 答辩时说明理由；或改为“已中止”状态 \\
+}
+\newcommand{\IterRows}{%
+迭代 1 & 存储内核 & 页格式与 CRC、DiskPager、LRU、堆表、单写者锁 & test\_storage 页与堆表用例通过 \\
+迭代 2 & 索引与恢复 & B+ 树、WAL 提交协议、启动恢复、崩溃测试 & 崩溃边界与 B+ 树用例通过 \\
+迭代 3 & SQL 前端与执行 & 词法 / 语法、绑定、计划、关系算子、约束、事务 & test\_sql、test\_engine、SQLite 差分通过 \\
+迭代 4 & 界面与交付 & Web 工作台、REPL、exe 打包、使用说明 & HTTP / CLI 测试与 exe 冒烟测试通过 \\
+迭代 5 & 扩展与文档 & 一致性检查、扫描对比、AI 助手、研究实验、报告 & 扩展功能测试与报告证据通过 \\
+迭代 6 & 数据集与连接优化 & Chinook 公开数据集、自适应连接重排、PPT 现场用例、Mac 启动与自检 & 全部自动化测试通过 \\
+}

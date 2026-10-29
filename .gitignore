@@ -34,3 +34,10 @@ MANIFEST.json
 # 汇报材料只在本地保留
 presentation/
 docs/presentation/
+
+# LaTeX 编译中间文件
+docs/report_latex/*.aux
+docs/report_latex/*.toc
+docs/report_latex/*.out
+docs/report_latex/*.synctex.gz
+docs/report_latex/main.pdf
