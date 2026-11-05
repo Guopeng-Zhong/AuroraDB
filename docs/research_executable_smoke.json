@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "generated_at": "2026-10-25T03:14:52.233354+00:00",
+  "generated_at": "2026-11-05T08:57:38.621072+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26200-SP0",
     "driver_python": "3.12.14"
@@ -10,9 +10,9 @@
     {
       "name": "packaged EXE startup with ephemeral loopback port and local mock",
       "passed": true,
-      "elapsed_ms": 280.771,
+      "elapsed_ms": 341.637,
       "details": {
-        "port": 64777,
+        "port": 59257,
         "bind": "127.0.0.1",
         "port_requested": 0,
         "demo": true,
@@ -23,18 +23,18 @@
     {
       "name": "bundled research HTML, JavaScript and readable light styles",
       "passed": true,
-      "elapsed_ms": 46.919,
+      "elapsed_ms": 51.464,
       "details": {
-        "html_characters": 17882,
-        "javascript_characters": 53871,
-        "stylesheet_characters": 33513,
+        "html_characters": 20195,
+        "javascript_characters": 61501,
+        "stylesheet_characters": 48379,
         "theme": "light"
       }
     },
     {
       "name": "research status contracts and explicit nonremote mock mode",
       "passed": true,
-      "elapsed_ms": 17.121,
+      "elapsed_ms": 16.228,
       "details": {
         "optimizer": {
           "mode": "heuristic",
@@ -42,7 +42,10 @@
           "statistics": {
             "available": false,
             "generation": null,
-            "tables": 0
+            "tables": 0,
+            "version": null,
+            "analyzed_rows": 0,
+            "table_count": 0
           },
           "learning": {
             "cost_models": {
@@ -50,18 +53,30 @@
                 "samples": 0,
                 "ready": false,
                 "weights": null,
-                "training_mae": null
+                "training_mae": null,
+                "training_range": null
               },
               "IndexScan": {
                 "samples": 0,
                 "ready": false,
                 "weights": null,
-                "training_mae": null
+                "training_mae": null,
+                "training_range": null
               }
+            },
+            "join_cost_model": {
+              "samples": 0,
+              "ready": false,
+              "weights": null,
+              "training_mae": null,
+              "training_range": null
             },
             "revision": 13,
             "cardinality_models": {},
             "observations": 0,
+            "join_models": {},
+            "join_observations": 0,
+            "join_validation_q_errors": {},
             "estimation_ms": 0.0,
             "cost_target": "cold application-buffer read time; OS cache retained"
           },
@@ -72,6 +87,12 @@
             "misses": 0,
             "template_hits": 0,
             "invalidations": 13
+          },
+          "workload": {
+            "templates": 0,
+            "executions": 0,
+            "capacity": 128,
+            "top_templates": []
           },
           "buffer_signature": [
             "lru",
@@ -98,7 +119,7 @@
             "未知外部候选不会自动推荐替换；不执行数据或结构修改。",
             "LIMIT/OFFSET 不参与对比；ORDER BY 必须保持并能由输出列核验。",
             "模型不是跨数据库预训练模型，不保证任意 OOD 查询或数据漂移。",
-            "没有连接顺序搜索；成本只影响已有访问路径，准确 RID 计数保留。"
+            "可信改写只改写 WHERE；连接顺序由 adaptive 模式的连接规划另行选择，准确 RID 计数保留。"
           ],
           "transaction_active": false
         },
@@ -148,7 +169,7 @@
     {
       "name": "CSRF and cross-origin rejection before research mutations",
       "passed": true,
-      "elapsed_ms": 44.1,
+      "elapsed_ms": 46.631,
       "details": {
         "missing_token_status": 403,
         "cross_origin_status": 403,
@@ -158,7 +179,7 @@
     {
       "name": "typed DISTINCT/GROUP BY and nested boolean JOIN execute correctly in final EXE",
       "passed": true,
-      "elapsed_ms": 31.083,
+      "elapsed_ms": 17.926,
       "details": {
         "distinct_typed_values": 4,
         "groups": 4,
@@ -169,7 +190,7 @@
     {
       "name": "strict request contract rejects unknown fields before packaged SQL writes",
       "passed": true,
-      "elapsed_ms": 31.528,
+      "elapsed_ms": 27.576,
       "details": {
         "http_status": 400,
         "stored_course_rows": 5
@@ -178,7 +199,7 @@
     {
       "name": "real statistics from bundled three-table dataset",
       "passed": true,
-      "elapsed_ms": 15.162,
+      "elapsed_ms": 15.771,
       "details": {
         "counts": {
           "students": 12,
@@ -186,14 +207,14 @@
           "enrollments": 19
         },
         "generation": 18,
-        "elapsed_ms": 1.194,
+        "elapsed_ms": 1.3291,
         "page_reads": 3
       }
     },
     {
       "name": "adaptive and heuristic mode switching preserves query values",
       "passed": true,
-      "elapsed_ms": 30.614,
+      "elapsed_ms": 46.176,
       "details": {
         "adaptive_result": [
           [
@@ -207,14 +228,23 @@
               "samples": 0,
               "ready": false,
               "weights": null,
-              "training_mae": null
+              "training_mae": null,
+              "training_range": null
             },
             "IndexScan": {
               "samples": 0,
               "ready": false,
               "weights": null,
-              "training_mae": null
+              "training_mae": null,
+              "training_range": null
             }
+          },
+          "join_cost_model": {
+            "samples": 0,
+            "ready": false,
+            "weights": null,
+            "training_mae": null,
+            "training_range": null
           },
           "revision": 19,
           "cardinality_models": {
@@ -222,11 +252,20 @@
               "samples": 1,
               "ready": false,
               "weights": null,
-              "training_mae": null
+              "training_mae": null,
+              "training_range": [
+                [
+                  0.08333333,
+                  0.08333333
+                ]
+              ]
             }
           },
           "observations": 1,
-          "estimation_ms": 0.183,
+          "join_models": {},
+          "join_observations": 0,
+          "join_validation_q_errors": {},
+          "estimation_ms": 0.173,
           "cost_target": "cold application-buffer read time; OS cache retained"
         }
       }
@@ -234,7 +273,7 @@
     {
       "name": "predictive and LRU policies through packaged HTTP controls",
       "passed": true,
-      "elapsed_ms": 93.072,
+      "elapsed_ms": 62.897,
       "details": {
         "predictive": {
           "policy": "predictive",
@@ -253,7 +292,10 @@
             "statistics": {
               "available": true,
               "generation": 19,
-              "tables": 3
+              "tables": 3,
+              "version": 19,
+              "analyzed_rows": 36,
+              "table_count": 3
             },
             "learning": {
               "cost_models": {
@@ -261,19 +303,31 @@
                   "samples": 0,
                   "ready": false,
                   "weights": null,
-                  "training_mae": null
+                  "training_mae": null,
+                  "training_range": null
                 },
                 "IndexScan": {
                   "samples": 0,
                   "ready": false,
                   "weights": null,
-                  "training_mae": null
+                  "training_mae": null,
+                  "training_range": null
                 }
+              },
+              "join_cost_model": {
+                "samples": 0,
+                "ready": false,
+                "weights": null,
+                "training_mae": null,
+                "training_range": null
               },
               "revision": 20,
               "cardinality_models": {},
               "observations": 0,
-              "estimation_ms": 0.183,
+              "join_models": {},
+              "join_observations": 0,
+              "join_validation_q_errors": {},
+              "estimation_ms": 0.173,
               "cost_target": "cold application-buffer read time; OS cache retained"
             },
             "cache": {
@@ -283,6 +337,12 @@
               "misses": 0,
               "template_hits": 0,
               "invalidations": 19
+            },
+            "workload": {
+              "templates": 0,
+              "executions": 0,
+              "capacity": 128,
+              "top_templates": []
             },
             "buffer_signature": [
               "predictive",
@@ -309,7 +369,7 @@
               "未知外部候选不会自动推荐替换；不执行数据或结构修改。",
               "LIMIT/OFFSET 不参与对比；ORDER BY 必须保持并能由输出列核验。",
               "模型不是跨数据库预训练模型，不保证任意 OOD 查询或数据漂移。",
-              "没有连接顺序搜索；成本只影响已有访问路径，准确 RID 计数保留。"
+              "可信改写只改写 WHERE；连接顺序由 adaptive 模式的连接规划另行选择，准确 RID 计数保留。"
             ],
             "transaction_active": false
           }
@@ -329,7 +389,8 @@
           "predictive_evictions": 0,
           "predictive_fallbacks": 0,
           "predictive_samples": 0,
-          "cache_policy_cpu_ns": 15800,
+          "predictive_admission_bypasses": 0,
+          "cache_policy_cpu_ns": 15000,
           "scan_page_accesses": 5,
           "scan_contexts": 16,
           "cache_size": 64,
@@ -352,7 +413,7 @@
     {
       "name": "trusted OR-to-IN proof with full submitted-data result comparison",
       "passed": true,
-      "elapsed_ms": 3.563,
+      "elapsed_ms": 18.083,
       "details": {
         "original_sql": "SELECT id FROM students WHERE id=1001 OR id=1005 ORDER BY id;",
         "candidate_sql": "SELECT \"id\" FROM \"students\" WHERE (\"id\" IN (1001,1005)) ORDER BY \"id\" ASC;",
@@ -393,14 +454,19 @@
                         "children": [],
                         "access_cost": {
                           "source": "heuristic",
-                          "fallback_reason": "no compatible single-column index"
+                          "fallback_reason": "no compatible single-column index",
+                          "selected_access": "TableScan",
+                          "selected_cost_ms": 0.077,
+                          "scan_cost_ms": 0.077,
+                          "cost_confidence": "medium"
                         },
                         "actual_rows": 12
                       }
                     ],
                     "estimation": {
                       "source": "heuristic",
-                      "reason": "adaptive statistics unavailable"
+                      "confidence": "low",
+                      "fallback_reason": "adaptive statistics unavailable"
                     },
                     "actual_rows": 2,
                     "q_error": 2.3333
@@ -412,11 +478,11 @@
             "actual_rows": 2
           },
           "row_count": 2,
-          "elapsed_ms": 0.2058,
-          "mad_ms": 0.0065,
+          "elapsed_ms": 0.1954,
+          "mad_ms": 0.0104,
           "runs": [
             {
-              "elapsed_ms": 0.2651,
+              "elapsed_ms": 0.2657,
               "stats": {
                 "cache_hits": 0,
                 "cache_misses": 1,
@@ -432,57 +498,60 @@
                 "predictive_evictions": 0,
                 "predictive_fallbacks": 0,
                 "predictive_samples": 0,
+                "predictive_admission_bypasses": 0,
+                "cache_policy_cpu_ns": 900,
+                "scan_page_accesses": 1,
+                "scan_contexts": 1,
+                "rows_scanned": 12,
+                "index_lookups": 0,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.1954,
+              "stats": {
+                "cache_hits": 0,
+                "cache_misses": 1,
+                "disk_reads": 1,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "predictive_admission_bypasses": 0,
+                "cache_policy_cpu_ns": 900,
+                "scan_page_accesses": 1,
+                "scan_contexts": 1,
+                "rows_scanned": 12,
+                "index_lookups": 0,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.185,
+              "stats": {
+                "cache_hits": 0,
+                "cache_misses": 1,
+                "disk_reads": 1,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "predictive_admission_bypasses": 0,
                 "cache_policy_cpu_ns": 800,
-                "scan_page_accesses": 1,
-                "scan_contexts": 1,
-                "rows_scanned": 12,
-                "index_lookups": 0,
-                "join_comparisons": 0
-              }
-            },
-            {
-              "elapsed_ms": 0.2058,
-              "stats": {
-                "cache_hits": 0,
-                "cache_misses": 1,
-                "disk_reads": 1,
-                "disk_writes": 0,
-                "cache_evictions": 0,
-                "staged_hits": 0,
-                "wal_bytes": 0,
-                "wal_recoveries": 0,
-                "wal_cleanup_errors": 0,
-                "commits": 0,
-                "rollbacks": 0,
-                "predictive_evictions": 0,
-                "predictive_fallbacks": 0,
-                "predictive_samples": 0,
-                "cache_policy_cpu_ns": 700,
-                "scan_page_accesses": 1,
-                "scan_contexts": 1,
-                "rows_scanned": 12,
-                "index_lookups": 0,
-                "join_comparisons": 0
-              }
-            },
-            {
-              "elapsed_ms": 0.1993,
-              "stats": {
-                "cache_hits": 0,
-                "cache_misses": 1,
-                "disk_reads": 1,
-                "disk_writes": 0,
-                "cache_evictions": 0,
-                "staged_hits": 0,
-                "wal_bytes": 0,
-                "wal_recoveries": 0,
-                "wal_cleanup_errors": 0,
-                "commits": 0,
-                "rollbacks": 0,
-                "predictive_evictions": 0,
-                "predictive_fallbacks": 0,
-                "predictive_samples": 0,
-                "cache_policy_cpu_ns": 700,
                 "scan_page_accesses": 1,
                 "scan_contexts": 1,
                 "rows_scanned": 12,
@@ -506,7 +575,8 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
-            "cache_policy_cpu_ns": 700,
+            "predictive_admission_bypasses": 0,
+            "cache_policy_cpu_ns": 900,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
             "rows_scanned": 12,
@@ -540,14 +610,20 @@
                           "source": "heuristic",
                           "exact_candidate_rows": 2,
                           "threshold_fraction": 0.35,
-                          "fallback_reason": "adaptive statistics unavailable or application cache warm"
+                          "fallback_reason": "adaptive statistics unavailable",
+                          "scan_cost_ms": 0.077,
+                          "index_cost_ms": 0.069,
+                          "cost_confidence": "medium",
+                          "selected_access": "IndexScan",
+                          "selected_cost_ms": 0.069
                         },
                         "actual_rows": 2
                       }
                     ],
                     "estimation": {
                       "source": "heuristic",
-                      "reason": "adaptive statistics unavailable"
+                      "confidence": "low",
+                      "fallback_reason": "adaptive statistics unavailable"
                     },
                     "actual_rows": 2,
                     "q_error": 1.5
@@ -559,11 +635,11 @@
             "actual_rows": 2
           },
           "row_count": 2,
-          "elapsed_ms": 0.3327,
-          "mad_ms": 0.0186,
+          "elapsed_ms": 0.2144,
+          "mad_ms": 0.0001,
           "runs": [
             {
-              "elapsed_ms": 0.2584,
+              "elapsed_ms": 0.2367,
               "stats": {
                 "cache_hits": 2,
                 "cache_misses": 2,
@@ -579,6 +655,33 @@
                 "predictive_evictions": 0,
                 "predictive_fallbacks": 0,
                 "predictive_samples": 0,
+                "predictive_admission_bypasses": 0,
+                "cache_policy_cpu_ns": 1000,
+                "scan_page_accesses": 0,
+                "scan_contexts": 0,
+                "rows_scanned": 2,
+                "index_lookups": 1,
+                "join_comparisons": 0
+              }
+            },
+            {
+              "elapsed_ms": 0.2143,
+              "stats": {
+                "cache_hits": 2,
+                "cache_misses": 2,
+                "disk_reads": 2,
+                "disk_writes": 0,
+                "cache_evictions": 0,
+                "staged_hits": 0,
+                "wal_bytes": 0,
+                "wal_recoveries": 0,
+                "wal_cleanup_errors": 0,
+                "commits": 0,
+                "rollbacks": 0,
+                "predictive_evictions": 0,
+                "predictive_fallbacks": 0,
+                "predictive_samples": 0,
+                "predictive_admission_bypasses": 0,
                 "cache_policy_cpu_ns": 1100,
                 "scan_page_accesses": 0,
                 "scan_contexts": 0,
@@ -588,7 +691,7 @@
               }
             },
             {
-              "elapsed_ms": 0.3327,
+              "elapsed_ms": 0.2144,
               "stats": {
                 "cache_hits": 2,
                 "cache_misses": 2,
@@ -604,32 +707,8 @@
                 "predictive_evictions": 0,
                 "predictive_fallbacks": 0,
                 "predictive_samples": 0,
-                "cache_policy_cpu_ns": 1500,
-                "scan_page_accesses": 0,
-                "scan_contexts": 0,
-                "rows_scanned": 2,
-                "index_lookups": 1,
-                "join_comparisons": 0
-              }
-            },
-            {
-              "elapsed_ms": 0.3513,
-              "stats": {
-                "cache_hits": 2,
-                "cache_misses": 2,
-                "disk_reads": 2,
-                "disk_writes": 0,
-                "cache_evictions": 0,
-                "staged_hits": 0,
-                "wal_bytes": 0,
-                "wal_recoveries": 0,
-                "wal_cleanup_errors": 0,
-                "commits": 0,
-                "rollbacks": 0,
-                "predictive_evictions": 0,
-                "predictive_fallbacks": 0,
-                "predictive_samples": 0,
-                "cache_policy_cpu_ns": 2200,
+                "predictive_admission_bypasses": 0,
+                "cache_policy_cpu_ns": 1100,
                 "scan_page_accesses": 0,
                 "scan_contexts": 0,
                 "rows_scanned": 2,
@@ -653,7 +732,8 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
-            "cache_policy_cpu_ns": 1500,
+            "predictive_admission_bypasses": 0,
+            "cache_policy_cpu_ns": 1100,
             "scan_page_accesses": 0,
             "scan_contexts": 0,
             "rows_scanned": 2,
@@ -666,16 +746,16 @@
           "replace": false,
           "sql": null,
           "reason": "查询过短或收益未超过保守噪声门槛",
-          "benefit_ms": -0.1269,
+          "benefit_ms": -0.019,
           "margin_ms": 1.0,
-          "speedup": 0.6186
+          "speedup": 0.9114
         },
         "timings": {
-          "compile_ms": 0.3844,
-          "validation_ms": 1.7437,
-          "total_ms": 2.355,
+          "compile_ms": 0.582,
+          "validation_ms": 1.4304,
+          "total_ms": 2.232,
           "estimated_break_even_calls": null,
-          "optimizer_ms": 2.2237,
+          "optimizer_ms": 2.1125,
           "model_ms": 0
         },
         "cache": {
@@ -695,7 +775,7 @@
     {
       "name": "exact-version conclusion cache is marked and does not pretend to remeasure",
       "passed": true,
-      "elapsed_ms": 12.615,
+      "elapsed_ms": 13.495,
       "details": {
         "cache": {
           "hit": true,
@@ -704,14 +784,14 @@
           "model_revision": 21
         },
         "timings": {
-          "compile_ms": 0.5015,
+          "compile_ms": 0.4896,
           "validation_ms": 0,
-          "total_ms": 0.645,
+          "total_ms": 0.658,
           "estimated_break_even_calls": null,
-          "cached_experiment_ms": 2.2237,
-          "cached_validation_ms": 1.7437,
-          "request_ms": 0.6237,
-          "optimizer_ms": 0.6237,
+          "cached_experiment_ms": 2.1125,
+          "cached_validation_ms": 1.4304,
+          "request_ms": 0.6341,
+          "optimizer_ms": 0.6341,
           "model_ms": 0
         },
         "warnings": [
@@ -723,7 +803,7 @@
     {
       "name": "non-equivalent external candidate cannot become an importable recommendation",
       "passed": true,
-      "elapsed_ms": 2.97,
+      "elapsed_ms": 16.162,
       "details": {
         "verification": {
           "level": "unknown",
@@ -743,7 +823,7 @@
     {
       "name": "current-data coincidence is tested and cannot authorize an unknown rewrite",
       "passed": true,
-      "elapsed_ms": 13.758,
+      "elapsed_ms": 3.236,
       "details": {
         "verification": {
           "level": "tested",
@@ -763,7 +843,7 @@
     {
       "name": "write candidate rejected without executing model or candidate text",
       "passed": true,
-      "elapsed_ms": 14.746,
+      "elapsed_ms": 27.24,
       "details": {
         "status": 400,
         "error": "诊断仅支持 SELECT，不执行数据或结构修改。",
@@ -773,7 +853,7 @@
     {
       "name": "semantic filter cold and warm exact-text cache",
       "passed": true,
-      "elapsed_ms": 45.697,
+      "elapsed_ms": 45.774,
       "details": {
         "input_rows": 5,
         "columns": [
@@ -794,9 +874,9 @@
           "unique_texts": 5,
           "deduplicated_rows": 0,
           "null_rows": 0,
-          "sql_elapsed_ms": 0.337,
-          "inference_elapsed_ms": 0.078,
-          "elapsed_ms": 0.464,
+          "sql_elapsed_ms": 0.456,
+          "inference_elapsed_ms": 0.08,
+          "elapsed_ms": 0.573,
           "budget_rows": 64,
           "budget_calls": 8,
           "budget_seconds": 30,
@@ -821,7 +901,8 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
-            "cache_policy_cpu_ns": 1100,
+            "predictive_admission_bypasses": 0,
+            "cache_policy_cpu_ns": 1200,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
             "rows_scanned": 5,
@@ -837,9 +918,9 @@
           "unique_texts": 5,
           "deduplicated_rows": 0,
           "null_rows": 0,
-          "sql_elapsed_ms": 0.291,
-          "inference_elapsed_ms": 0.023,
-          "elapsed_ms": 0.358,
+          "sql_elapsed_ms": 0.448,
+          "inference_elapsed_ms": 0.06,
+          "elapsed_ms": 0.557,
           "budget_rows": 64,
           "budget_calls": 8,
           "budget_seconds": 30,
@@ -864,6 +945,7 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
+            "predictive_admission_bypasses": 0,
             "cache_policy_cpu_ns": 900,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
@@ -880,7 +962,7 @@
     {
       "name": "semantic classify cold and warm exact-text cache",
       "passed": true,
-      "elapsed_ms": 46.717,
+      "elapsed_ms": 45.025,
       "details": {
         "input_rows": 5,
         "columns": [
@@ -929,9 +1011,9 @@
           "unique_texts": 5,
           "deduplicated_rows": 0,
           "null_rows": 0,
-          "sql_elapsed_ms": 0.304,
-          "inference_elapsed_ms": 0.061,
-          "elapsed_ms": 0.409,
+          "sql_elapsed_ms": 0.41,
+          "inference_elapsed_ms": 0.053,
+          "elapsed_ms": 0.488,
           "budget_rows": 64,
           "budget_calls": 8,
           "budget_seconds": 30,
@@ -956,7 +1038,8 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
-            "cache_policy_cpu_ns": 1100,
+            "predictive_admission_bypasses": 0,
+            "cache_policy_cpu_ns": 1200,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
             "rows_scanned": 5,
@@ -972,9 +1055,9 @@
           "unique_texts": 5,
           "deduplicated_rows": 0,
           "null_rows": 0,
-          "sql_elapsed_ms": 0.261,
-          "inference_elapsed_ms": 0.024,
-          "elapsed_ms": 0.328,
+          "sql_elapsed_ms": 0.438,
+          "inference_elapsed_ms": 0.025,
+          "elapsed_ms": 0.497,
           "budget_rows": 64,
           "budget_calls": 8,
           "budget_seconds": 30,
@@ -999,7 +1082,8 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
-            "cache_policy_cpu_ns": 800,
+            "predictive_admission_bypasses": 0,
+            "cache_policy_cpu_ns": 1400,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
             "rows_scanned": 5,
@@ -1015,7 +1099,7 @@
     {
       "name": "semantic aggregate cold and warm exact-text cache",
       "passed": true,
-      "elapsed_ms": 32.11,
+      "elapsed_ms": 44.952,
       "details": {
         "input_rows": 5,
         "columns": [
@@ -1040,9 +1124,9 @@
           "unique_texts": 5,
           "deduplicated_rows": 0,
           "null_rows": 0,
-          "sql_elapsed_ms": 0.266,
-          "inference_elapsed_ms": 0.049,
-          "elapsed_ms": 0.354,
+          "sql_elapsed_ms": 0.37,
+          "inference_elapsed_ms": 0.055,
+          "elapsed_ms": 0.45,
           "budget_rows": 64,
           "budget_calls": 8,
           "budget_seconds": 30,
@@ -1067,7 +1151,8 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
-            "cache_policy_cpu_ns": 900,
+            "predictive_admission_bypasses": 0,
+            "cache_policy_cpu_ns": 1000,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
             "rows_scanned": 5,
@@ -1083,9 +1168,9 @@
           "unique_texts": 5,
           "deduplicated_rows": 0,
           "null_rows": 0,
-          "sql_elapsed_ms": 0.212,
-          "inference_elapsed_ms": 0.023,
-          "elapsed_ms": 0.271,
+          "sql_elapsed_ms": 0.442,
+          "inference_elapsed_ms": 0.029,
+          "elapsed_ms": 0.508,
           "budget_rows": 64,
           "budget_calls": 8,
           "budget_seconds": 30,
@@ -1110,6 +1195,7 @@
             "predictive_evictions": 0,
             "predictive_fallbacks": 0,
             "predictive_samples": 0,
+            "predictive_admission_bypasses": 0,
             "cache_policy_cpu_ns": 900,
             "scan_page_accesses": 1,
             "scan_contexts": 1,
@@ -1126,7 +1212,7 @@
     {
       "name": "inference cache clear endpoint reports actual empty cache",
       "passed": true,
-      "elapsed_ms": 29.687,
+      "elapsed_ms": 31.076,
       "details": {
         "response": {
           "cleared": true,
@@ -1152,7 +1238,7 @@
     {
       "name": "row and call budgets reject partial results without breaking SQL",
       "passed": true,
-      "elapsed_ms": 18.474,
+      "elapsed_ms": 61.864,
       "details": {
         "rejections": [
           {
@@ -1177,7 +1263,7 @@
     {
       "name": "research rejections preserve active transaction and staged data until rollback",
       "passed": true,
-      "elapsed_ms": 228.565,
+      "elapsed_ms": 264.514,
       "details": {
         "rejections": [
           {
@@ -1222,7 +1308,7 @@
     {
       "name": "rollback followed by physical CHECK and integrity HTTP verification",
       "passed": true,
-      "elapsed_ms": 49.251,
+      "elapsed_ms": 60.402,
       "details": {
         "sql_message": "Database integrity OK",
         "summary": {
@@ -1238,16 +1324,16 @@
           "retained_pages": 0
         },
         "issues": 0,
-        "elapsed_ms": 2.026
+        "elapsed_ms": 2.21
       }
     },
     {
       "name": "same packaged EXE reopens the temporary database after owned server shutdown",
       "passed": true,
-      "elapsed_ms": 652.231,
+      "elapsed_ms": 702.203,
       "details": {
         "returncode": 0,
-        "stdout": "check       | status | detail                                                          \r\n------------+--------+-----------------------------------------------------------------\r\npages       | pass   | All allocated current-view page images and basic page structures\r\ncatalog     | pass   | Catalog root, ordered chunks and committed catalog agreement    \r\nschema      | pass   | Column schema, defaults and constraint metadata                 \r\nheap        | pass   | Heap slots, stable RIDs, forwarding references and row counts   \r\nconstraints | pass   | Row fields, column types, NULL and UNIQUE/PRIMARY constraints   \r\nindexes     | pass   | B+ tree invariants and bidirectional index/heap agreement       \r\nstructure   | pass   | Allocated reference bounds and exclusive page ownership         \r\nDatabase integrity OK  (2.479 ms)\r\nCOUNT(*)\r\n--------\r\n5       \r\n{\r\n  \"operator\": \"Project\",\r\n  \"detail\": \"COUNT(*)\",\r\n  \"estimated_rows\": 1,\r\n  \"children\": [\r\n    {\r\n      \"operator\": \"HashAggregate\",\r\n      \"detail\": \"global aggregation\",\r\n      \"estimated_rows\": 1,\r\n      \"children\": [\r\n        {\r\n          \"operator\": \"TableScan\",\r\n          \"detail\": \"courses\",\r\n          \"estimated_rows\": 5,\r\n          \"children\": [],\r\n          \"access_cost\": {\r\n            \"source\": \"heuristic\",\r\n            \"fallback_reason\": \"no compatible single-column index\"\r\n          },\r\n          \"actual_rows\": 5\r\n        }\r\n      ],\r\n      \"actual_rows\": 1\r\n    }\r\n  ],\r\n  \"actual_rows\": 1\r\n}\r\n1 ��  (0.153 ms)"
+        "stdout": "check       | status | detail                                                          \r\n------------+--------+-----------------------------------------------------------------\r\npages       | pass   | All allocated current-view page images and basic page structures\r\ncatalog     | pass   | Catalog root, ordered chunks and committed catalog agreement    \r\nschema      | pass   | Column schema, defaults and constraint metadata                 \r\nheap        | pass   | Heap slots, stable RIDs, forwarding references and row counts   \r\nconstraints | pass   | Row fields, column types, NULL and UNIQUE/PRIMARY constraints   \r\nindexes     | pass   | B+ tree invariants and bidirectional index/heap agreement       \r\nstructure   | pass   | Allocated reference bounds and exclusive page ownership         \r\nDatabase integrity OK  (3.286 ms)\r\nCOUNT(*)\r\n--------\r\n5       \r\n{\r\n  \"operator\": \"Project\",\r\n  \"detail\": \"COUNT(*)\",\r\n  \"estimated_rows\": 1,\r\n  \"children\": [\r\n    {\r\n      \"operator\": \"HashAggregate\",\r\n      \"detail\": \"global aggregation\",\r\n      \"estimated_rows\": 1,\r\n      \"children\": [\r\n        {\r\n          \"operator\": \"TableScan\",\r\n          \"detail\": \"courses\",\r\n          \"estimated_rows\": 5,\r\n          \"children\": [],\r\n          \"access_cost\": {\r\n            \"source\": \"heuristic\",\r\n            \"fallback_reason\": \"no compatible single-column index\",\r\n            \"selected_access\": \"TableScan\",\r\n            \"selected_cost_ms\": 0.07,\r\n            \"scan_cost_ms\": 0.07,\r\n            \"cost_confidence\": \"medium\"\r\n          },\r\n          \"actual_rows\": 5\r\n        }\r\n      ],\r\n      \"actual_rows\": 1\r\n    }\r\n  ],\r\n  \"actual_rows\": 1\r\n}\r\n1 ��  (0.785 ms)"
       }
     }
   ],
@@ -1257,9 +1343,9 @@
     "HTTP checks do not substitute for real browser layout QA.",
     "Performance recommendations are observed, never forced on the tiny demo data."
   ],
-  "exe_sha256": "953f0845572d5b016f099af2bcf742936ddd07c9885dccc4721a252a5437637b",
-  "exe_bytes": 9674016,
+  "exe_sha256": "bcf28330bd6e4dbd26e25dc1f1a53d432779526fc363dc0bacd575d1d74c6865",
+  "exe_bytes": 8575107,
   "total_checks": 22,
   "passed_checks": 22,
-  "elapsed_seconds": 2.272
+  "elapsed_seconds": 2.312
 }

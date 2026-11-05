@@ -29,7 +29,7 @@ bash ./启动工作台.command
 
 脚本优先使用项目 `.venv`，自动检查 Python 版本、切换到项目目录、选择空闲端口并打开浏览器，数据存放在 `data/mac-demo`。支持 Apple Silicon 与 Intel 的对应 Python 环境，不使用 Windows EXE。PPT 用例入口与 Windows 相同。
 
-正式演示前运行 `python3 tools/check_macos.py`（使用虚拟环境时改用其 Python），检查资源加载、文件锁、中文/空格路径、PPT 接口及结果一致性。报告保存在 `.build/macos-compatibility.json`，只有在真实 macOS 上运行成功才标记 `native_macos_verified: true`；浏览器排版另在目标 Mac 上检查。更多交接说明见 `MAC_Codex_交付交接.md`。
+正式演示前运行 `python3 tools/check_macos.py`（使用虚拟环境时改用其 Python），检查资源加载、文件锁、中文/空格路径、PPT 接口及结果一致性。报告保存在 `.build/macos-compatibility.json`，只有在真实 macOS 上运行成功才标记 `native_macos_verified: true`；浏览器排版另在目标 Mac 上检查。
 
 ## 开放数据集模式：Chinook
 
@@ -64,7 +64,7 @@ python tools/benchmark.py
 
 ## 附加功能与 AI
 
-工作台使用黑白配色，直接显示编辑器、查询结果、物理计划和实际统计。顶部显示自动提交或活动事务，以及暂存页数。
+工作台提供浅色、深色和跟随系统三种主题，直接显示编辑器、查询结果、物理计划和实际统计。顶部显示自动提交或活动事务，以及暂存页数。
 
 - **一致性检查**：界面按钮或 `CHECK DATABASE;` 检查物理页 CRC、目录、堆记录、约束、B+ 树和索引与堆表的对应关系。只读检查当前会话的数据；物理读取绕过已提交页缓存。保留但未回收的历史页单独报告，不作为错误。此功能不验证 WAL 协议，不自动修复文件。
 - **扫描对比**：对同一条 SELECT 分别使用全表扫描和规划器自动选择，展示实际扫描行数、页读取和时间，并按保留重复项及输出类型的结果集合核对一致性。每路前清空应用缓冲池；操作系统缓存和事务暂存页保留。对比使用不带 LIMIT / OFFSET 的单个 SELECT，避免排序同值项导致不同合法子集；结果对比不验证输出顺序。
@@ -85,7 +85,7 @@ python tools/benchmark.py
 
 学校端点为 `/api/v1/chat/completions`，使用 Bearer 鉴权。默认选 `deepseek-chat`；可切换为 `deepseek-reasoner`、`qwen` 或 `qwen3.8-27b`。地址与调用名已按[学校官方文档](https://claw.sjtu.edu.cn/guide/sjtu-api/)核对。AI 配置仅在后端读取，不进入浏览器，`*.local.json`、环境变量文件和含非空顶层 `api_key` 的有效配置 JSON 会从提交包排除。也可通过 `--ai-config` 指定配置文件，或使用 `AURORA_AI_MODE`、`AURORA_AI_BASE_URL`、`AURORA_AI_MODEL`、`AURORA_AI_API_KEY`、`AURORA_AI_TIMEOUT`、`AURORA_AI_REQUESTS_PER_MINUTE` 环境变量。
 
-学校额度为每分钟 10 次请求、300000 tokens，每周 1000000000 tokens。项目的每分钟请求限制由当前进程内的 AI 服务共享；同一 Key 的其他进程、设备或应用仍会共同占用学校额度，不能由本机限流全局协调。远程配置状态不代表连接成功，具体实连结果见 `docs/campus_api_smoke.json`；少量成功请求不代表模型准确率或优化收益。网络请求不持有数据库锁，失败不会关闭 SQL 工作台。详细步骤见 `docs/AI_API接入说明.txt`。
+学校额度为每分钟 10 次请求、300000 tokens，每周 1000000000 tokens。项目的每分钟请求限制由当前进程内的 AI 服务共享；同一 Key 的其他进程、设备或应用仍会共同占用学校额度，不能由本机限流全局协调。远程配置状态不代表连接成功，具体实连结果见 `docs/campus_api_smoke.json`（2026-10-25 的验收记录，复现需要本人的 API Key：`python tools/campus_api_smoke.py --live`）；少量成功请求不代表模型准确率或优化收益。网络请求不持有数据库锁，失败不会关闭 SQL 工作台。详细步骤见 `docs/AI_API接入说明.txt`。
 
 `timeout` 通用代码默认 90 秒、允许 0.1–300 秒；学校模板及本机配置为 180 秒。本轮实连曾发生一次 90 秒内未取得解释响应的情况，原记录保留在 `docs/campus_api_timeout_observation.json`。该值是一次远程请求的网络总期限，覆盖传输槽等待、DNS、连接/TLS、写入及读取。AI 状态公开 `timeout_seconds`，AI 助手与可信优化页面按该值再加 15 秒等待，最大 315 秒。每个 AIService 最多同时保留两个传输任务；系统 DNS 调用不能强制中断，超时后其任务仍占槽直到结束，结束后不会补发已取消的请求。延长等待不能保证网络或模型排队始终可用，演示时应准备普通 SQL 路径。
 
@@ -106,7 +106,7 @@ python tools/benchmark.py
 
 语义实验默认 64 行、每批 8 条、最多 8 批、总预算 30 秒；SQL 执行协作式检查 6 秒、10 万扫描行、20 万连接比较和 2 万中间行。规划计入总时长但不能强制中断，预算不是硬实时保证。只把用户选择的 TEXT 字段与判断条件发送给模型。NULL 不调用模型；推理期间释放数据库锁，输出对应开始时的提交态物化快照。本地规则模式只接受 `关键词：数据库|查询|索引` 这类条件。
 
-这些是研究思想在教学内核上的缩减实现，不是原论文完整系统的复现。缓存 180 次实验结果全部一致，部分热点配置减少约 2.55% 文件页读取，纯扫描存在时间退化；本地语义协议实验将 32 次请求降为批量 4 次、热缓存 0 次。学校真实模型的系统性准确率、延迟分布和优化收益仍需单独实验，不能用协议演示或连通性测试替代。
+这些是研究思想在教学内核上的缩减实现，不是原论文完整系统的复现。缓存实验 180 次运行结果全部一致，热点加大扫描与热点迁移配置最多减少约 12.8% 文件页读取，重复范围与纯扫描没有读页收益且部分配置耗时变长；本地语义协议实验将 32 次请求降为批量 4 次、热缓存 0 次。学校真实模型的系统性准确率、延迟分布和优化收益仍需单独实验，不能用协议演示或连通性测试替代。
 
 ```powershell
 python tools/optimizer_experiment.py

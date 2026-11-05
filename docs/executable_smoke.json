@@ -12,6 +12,6 @@
     "EXE local JSON AI configuration and explicitly labeled nonexecuting mock SQL suggestion",
     "EXE reopen after server process termination"
   ],
-  "exe_bytes": 9674016,
+  "exe_bytes": 8575107,
   "note": "Executed from a separate working directory with a temporary database; no external Python executable or database engine launched by the EXE."
 }

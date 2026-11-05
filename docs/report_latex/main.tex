@@ -15,6 +15,7 @@
 \usepackage[colorlinks=true,linkcolor=black,citecolor=blue!60!black,urlcolor=blue!60!black,
             bookmarksnumbered=true]{hyperref}
 \usepackage{xurl}
+\hypersetup{pdftitle={AuroraDB 大作业报告}, pdfauthor={钟国鹏、曾子恒、黄俊植、路茗淳}, pdfsubject={数据库原理课程大作业}}
 
 \setmainfont{Times New Roman}
 \setsansfont{Arial}
@@ -1011,7 +1012,7 @@ NULL & 未知 OR 未知 = 未知 & 未知 & 两边都丢弃 \\
   \item 默认最多 64 行、每批 8 条、最多 8 批，SQL 与推理总预算 30 秒；推理期间不持有数据库锁，普通 SQL 可以继续执行。
   \item 未配置模型时提供“关键词：词一|词二”的本地确定性演示模式，并明确标注“未调用大模型”。
 \end{itemize}
-系统也已接入上海交通大学校园大模型服务（\fn{deepseek-chat}）完成小样本真实验收，验收记录保存在 \fn{docs/campus_api_smoke.json}。
+系统也已接入上海交通大学校园大模型服务（\fn{deepseek-chat}）完成小样本真实验收，验收记录（2026-10-25）保存在 \fn{docs/campus_api_smoke.json}。
 图 \ref{fig:semantic} 为本地演示模式下的语义筛选结果。
 
 \begin{figure}[!htb]
@@ -1173,10 +1174,12 @@ AI 语义、服务与交付 & ai (22)、semantic (17)、server (13)、ai\_deadli
 所有实验脚本在临时数据库中运行，使用固定的数据生成方式与随机种子，把参数、时间、原始计数和源码 SHA-256 写入 JSON，
 源码变化后旧的实验证据会被判定为过期。“读页”指数据库文件的应用层页读取次数，操作系统文件缓存保留；
 耗时为包含 Python 开销的墙钟时间，只用于同一批次内的相对比较。
+可信改写、学习型优化与语义算子实验于 2026-11-05 在 Windows 11、Python 3.12.14 上用最终源码重新运行；
+预测缓冲的同版对照（第 \ref{sec:exp-buffer} 节）取自 2026-10-28 的 Linux 完整实验。
 
 \subsection{可信改写}
 实验在 5\,000 行、16 页缓存的数据库上构造 13 个案例（\fn{docs/optimizer_research.json}），全部符合预期，代表性案例见表 \ref{tab:opt}。
-在 OR→IN 正例中，扫描行数由 5\,000 降为 2，读页由 109 降为 3，中位耗时由 70.05 ms 降为 1.90 ms。
+在 OR→IN 正例中，扫描行数由 5\,000 降为 2，读页由 109 降为 3，中位耗时由 36.94 ms 降为 0.82 ms。
 “短查询回退”案例虽为 proven，但原查询只需 0.04 ms，未达到 2 ms 门槛，因此不建议替换；
 未知外部候选即使结果一致也只得到 tested；插入数据后的反例、布尔与数值混淆、外连接与重复行变化都被判为 unknown 并拒绝。
 
@@ -1215,9 +1218,9 @@ P95 耗时基本持平，说明更准确的估计并不必然带来所有查询�
 \midrule
 平滑 Q-error 中位数 & 1.850 & 1.027 \\
 平滑 Q-error P95 & 2.624 & 1.182 \\
-9 条查询中位耗时之和 (ms) & 1342.9 & 847.6 \\
-逐查询中位耗时的中位数 (ms) & 147.5 & 68.6 \\
-逐查询中位耗时的 P95 (ms) & 253.1 & 255.8 \\
+9 条查询中位耗时之和 (ms) & 895.8 & 523.6 \\
+逐查询中位耗时的中位数 (ms) & 94.3 & 45.9 \\
+逐查询中位耗时的 P95 (ms) & 177.7 & 182.5 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1294,9 +1297,9 @@ P95 耗时基本持平，说明更准确的估计并不必然带来所有查询�
 \toprule
 方式 & 批大小 & HTTP 调用 & 缓存命中 & 总耗时 (ms) \\
 \midrule
-逐条调用 & 1 & 32 & 0 & 213.4 \\
-批量（冷缓存） & 8 & 4 & 0 & 45.6 \\
-批量（热缓存） & 8 & 0 & 32 & 1.4 \\
+逐条调用 & 1 & 32 & 0 & 191.8 \\
+批量（冷缓存） & 8 & 4 & 0 & 18.2 \\
+批量（热缓存） & 8 & 0 & 32 & 0.9 \\
 \bottomrule
 \end{tabular}
 \end{table}
